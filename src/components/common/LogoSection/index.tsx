@@ -10,7 +10,7 @@ const LogoSection: React.FC = () => {
           <Image
             className="hidden dark:block"
             src={"/images/logo/logo.png"}
-            alt="Logo"
+            alt="Logo-dark"
             width={176}
             height={178}
           />

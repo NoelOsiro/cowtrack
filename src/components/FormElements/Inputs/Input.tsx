@@ -22,11 +22,16 @@ const InputField: React.FC<InputFieldProps> = ({
     touched,
 }) => (
     <div className="mb-4">
-        <label className="mb-2.5 block font-medium text-black dark:text-white">
+        <label
+            htmlFor={name}
+            className="mb-2.5 block font-medium text-black dark:text-white"
+            data-testid="input-label"
+        >
             {name.charAt(0).toUpperCase() + name.slice(1)}
         </label>
         <div className="relative">
             <input
+                id={name}
                 type={type}
                 name={name}
                 placeholder={placeholder}
@@ -36,6 +41,7 @@ const InputField: React.FC<InputFieldProps> = ({
                 className={`w-full rounded-lg border ${
                     touched && error ? "border-red-500" : "border-stroke"
                 } bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                data-testid="input-field"
             />
             {touched && error ? (
                 <div className="text-red-500">{error}</div>
