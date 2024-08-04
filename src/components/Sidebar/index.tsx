@@ -69,8 +69,8 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Customers",
-        route: "/customers",
+        label: "Count",
+        route: "/count",
       },
       {
         icon: (
@@ -104,11 +104,11 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Sales",
+        label: "Livestock",
         route: "#",
         children: [
-          { label: "Sales", route: "/sales" },
-          { label: "Team", route: "/teams" },
+          { label: "Cattle", route: "/livestock" },
+          { label: "Records", route: "/records" },
         ],
       },
       {
@@ -142,8 +142,8 @@ const menuGroups = [
         label: "Inventory",
         route: "#",
         children: [
-          { label: "Routers", route: "/routers" },
-          { label: "Phones", route: "/phones" },
+          { label: "Feed", route: "/feed" },
+          { label: "Resouces", route: "/resoucres" },
         ],
       },
       {
