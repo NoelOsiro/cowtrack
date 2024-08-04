@@ -1,23 +1,12 @@
 'use client'
 import React from "react";
-import { useFormik } from "formik";
 import * as Yup from "yup";
-import { createClient } from "@/src/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import FormContainer from "../FormElements/FormContainer";
 import InputField from "../FormElements/Inputs/Input";
 import PasswordInputField from "../FormElements/Inputs/PasswordInput";
 import SubmitButton from "../FormElements/Buttons/Submit";
 import useSignInFormik from "@/src/hooks/useSignInFormik";
-
-
-// Validation schema
-const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email address").required("Required"),
-    password: Yup.string().min(6, "Password must be at least 6 characters").required("Required"),
-});
 
 const SignInForm = () => {
     const formik = useSignInFormik();

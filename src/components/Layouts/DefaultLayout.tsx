@@ -1,9 +1,11 @@
 "use client";
-import React, { useState, ReactNode, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import React, { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import { createClient } from "@/src/utils/supabase/client";
+import Sidebar from "@/src/components/Sidebar";
+import Header from "@/src/components/Header";
+
 
 export default function DefaultLayout({
   children,
@@ -26,7 +28,7 @@ export default function DefaultLayout({
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      <div className="flex">
+      <div className="flex w-full">
         {/* <!-- ===== Sidebar Start ===== --> */}
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {/* <!-- ===== Sidebar End ===== --> */}

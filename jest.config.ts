@@ -12,12 +12,15 @@ const config: Config = {
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     // ...
-    '^@/src/components/(.*)$': '<rootDir>/components/$1',
+    '^@/(.*)$': '<rootDir>/$1',
   },
   collectCoverage: true, // Enable coverage collection
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}", // Adjust the paths based on your project structure
     "!src/**/__tests__/**", // Exclude test files
+    "!src/app/auth/callback/*", // Exclude auth callbacks
+    "!src/utils/supabase/*", // Exclude Supabase
+    "!src/types/*", // Exclude types
     "!src/**/*.d.ts", // Exclude TypeScript declaration files
     "!src/**/index.ts" // Exclude index files
   ],
