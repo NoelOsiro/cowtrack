@@ -18,7 +18,7 @@ export default function DefaultLayout({
     const checkUser = async () => {
       const { error } = await supabase.auth.getUser();
       if (error) {
-        router.push("/auth/signin");
+        router.push("/login");
       }
     };
 
