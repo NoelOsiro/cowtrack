@@ -1,48 +1,48 @@
 
-import { CUSTOMER } from "@/types/customer";
+import { CUSTOMER } from "@/src/types/customer";
 
-// const customerData: CUSTOMER[] = [
-//   {
-//     name: "Google",
-//     phone: '0729732440',
-//     accountNo: "5,768",
-//     date: "2024-07-12",
-//     package: '3,500',
-//     email: 'osiroski@gmail.com'
-//   },
-//   {
-//     name: "Twitter",
-//     phone: '0729732440',
-//     accountNo: "4,635",
-//     date: "2024-07-12",
-//     package: '3,500',
-//     email: 'osiroski@gmail.com'
-//   },
-//   {
-//     name: "Github",
-//     phone: '0729732440',
-//     accountNo: "4,290",
-//     date: "2024-07-12",
-//     package: '3,500',
-//     email: 'osiroski@gmail.com'
-//   },
-//   {
-//     name: "Vimeo",
-//     phone: '0729732440',
-//     accountNo: "3,580",
-//     date: "2024-07-12",
-//     package: '3,500',
-//     email: 'osiroski@gmail.com'
-//   },
-//   {
-//     name: "Facebook",
-//     phone: '0729732440',
-//     accountNo: "6,768",
-//     date: "2024-07-12",
-//     package: '3,500',
-//     email: 'osiroski@gmail.com'
-//   },
-// ];
+const customerData= [
+  {
+    name: "Google",
+    phone: '0729732440',
+    accountNo: "5,768",
+    date: "2024-07-12",
+    package: '3,500',
+    email: 'osiroski@gmail.com'
+  },
+  {
+    name: "Twitter",
+    phone: '0729732440',
+    accountNo: "4,635",
+    date: "2024-07-12",
+    package: '3,500',
+    email: 'osiroski@gmail.com'
+  },
+  {
+    name: "Github",
+    phone: '0729732440',
+    accountNo: "4,290",
+    date: "2024-07-12",
+    package: '3,500',
+    email: 'osiroski@gmail.com'
+  },
+  {
+    name: "Vimeo",
+    phone: '0729732440',
+    accountNo: "3,580",
+    date: "2024-07-12",
+    package: '3,500',
+    email: 'osiroski@gmail.com'
+  },
+  {
+    name: "Facebook",
+    phone: '0729732440',
+    accountNo: "6,768",
+    date: "2024-07-12",
+    package: '3,500',
+    email: 'osiroski@gmail.com'
+  },
+];
 
 const SalesTable = () => {
   return (

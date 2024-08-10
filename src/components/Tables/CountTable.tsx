@@ -5,7 +5,7 @@ import DropdownDefault from "../Dropdowns/DropdownDefault";
 const brandData: BRAND[] = [
   {
     logo: "/images/brand/brand-01.svg",
-    name: "Google",
+    name: "Goats",
     visitors: 3.5,
     revenues: "5,768",
     sales: 590,
@@ -13,7 +13,7 @@ const brandData: BRAND[] = [
   },
   {
     logo: "/images/brand/brand-02.svg",
-    name: "Twitter",
+    name: "Cows",
     visitors: 2.2,
     revenues: "4,635",
     sales: 467,
@@ -21,7 +21,7 @@ const brandData: BRAND[] = [
   },
   {
     logo: "/images/brand/brand-06.svg",
-    name: "Youtube",
+    name: "Sheep",
     visitors: 2.1,
     revenues: "4,290",
     sales: 420,
@@ -52,7 +52,7 @@ const TableFour: React.FC = () => {
         <div className="mb-6 flex justify-between">
           <div>
             <h4 className="text-title-sm2 font-bold text-black dark:text-white">
-              Top Channels
+              Latest Count
             </h4>
           </div>
           <DropdownDefault />
@@ -62,22 +62,22 @@ const TableFour: React.FC = () => {
           <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-4">
             <div className="p-2.5 xl:p-4">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Source
+                Animal
               </h5>
             </div>
             <div className="p-2.5 text-center xl:p-4">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Visitors
+                Date
               </h5>
             </div>
             <div className="p-2.5 text-center xl:p-4">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Revenues
+                Count
               </h5>
             </div>
             <div className="hidden p-2.5 text-center sm:block xl:p-4">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
-                Conversion
+                Trend
               </h5>
             </div>
           </div>
@@ -107,7 +107,7 @@ const TableFour: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-center p-2.5 xl:p-5">
-                <p className="font-medium text-meta-3">${brand.revenues}</p>
+                <p className="font-medium text-meta-3">{brand.revenues}</p>
               </div>
 
               <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
