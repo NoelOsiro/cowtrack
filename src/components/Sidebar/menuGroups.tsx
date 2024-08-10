@@ -91,8 +91,8 @@ export const menuGroups = [
           label: "Livestock",
           route: "#",
           children: [
-            { label: "Cattle", route: "/livestock" },
-            { label: "Records", route: "/records" },
+            { label: "Cattle", route: "/livestock/cattle" },
+            { label: "Records", route: "/livestock/records" },
           ],
         },
         {

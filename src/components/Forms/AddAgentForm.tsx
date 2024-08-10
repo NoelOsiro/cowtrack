@@ -6,23 +6,25 @@ import DatePickerOne from "@/src/components/FormElements/DatePicker/DatePickerOn
 
 // Validation schema
 const validationSchema = Yup.object({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
-    id: Yup.string().required("ID is required"),
-    phone: Yup.string().matches(/^\d{10}$/, "Phone number must be 10 digits").required("Phone number is required"),
-    startDate: Yup.string().required("Start date is required"),
+    animalId: Yup.string().required("Animal ID is required"),
+    type: Yup.string().required("Type is required"),
+    breed: Yup.string().required("Breed is required"),
+    weight: Yup.number().required("Weight is required").min(0, "Weight must be positive"),
+    age: Yup.number().required("Age is required").min(0, "Age must be positive"),
+    healthStatus: Yup.string().required("Health status is required"),
+    acquisitionDate: Yup.string().required("Acquisition date is required"),
 });
 
-const AddAgentForm: React.FC = () => {
+const AddLivestockForm: React.FC = () => {
     const formik = useFormik({
         initialValues: {
-            firstName: "",
-            lastName: "",
-            email: "",
-            id: "",
-            phone: "",
-            startDate: "",
+            animalId: "",
+            type: "",
+            breed: "",
+            weight: "",
+            age: "",
+            healthStatus: "",
+            acquisitionDate: "",
         },
         validationSchema,
         onSubmit: (values) => {
@@ -34,46 +36,48 @@ const AddAgentForm: React.FC = () => {
     return (
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">Add Agent</h3>
+                <h3 className="font-medium text-black dark:text-white">Add Livestock</h3>
             </div>
             <form onSubmit={formik.handleSubmit}>
                 <div className="p-6.5">
                     <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                         <div className="w-full xl:w-1/2">
                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                First name
+                                Animal ID
                             </label>
                             <input
                                 type="text"
-                                name="firstName"
-                                placeholder="Enter your first name"
+                                name="animalId"
+                                placeholder="Enter Animal ID"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.firstName}
-                                className={`w-full rounded border-[1.5px] ${formik.touched.firstName && formik.errors.firstName ? "border-red-500" : "border-stroke"
-                                    } bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                                value={formik.values.animalId}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.animalId && formik.errors.animalId ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
                             />
-                            {formik.touched.firstName && formik.errors.firstName ? (
-                                <div className="text-red-500 mt-2">{formik.errors.firstName}</div>
+                            {formik.touched.animalId && formik.errors.animalId ? (
+                                <div className="text-red-500 mt-2">{formik.errors.animalId}</div>
                             ) : null}
                         </div>
 
                         <div className="w-full xl:w-1/2">
                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                Last name
+                                Type
                             </label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                placeholder="Enter your last name"
+                            <select
+                                name="type"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.lastName}
-                                className={`w-full rounded border-[1.5px] ${formik.touched.lastName && formik.errors.lastName ? "border-red-500" : "border-stroke"
-                                    } bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                            />
-                            {formik.touched.lastName && formik.errors.lastName ? (
-                                <div className="text-red-500 mt-2">{formik.errors.lastName}</div>
+                                value={formik.values.type}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.type && formik.errors.type ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                            >
+                                <option value="" label="Select type" />
+                                <option value="Cattle" label="Cattle" />
+                                <option value="Sheep" label="Sheep" />
+                                <option value="Goat" label="Goat" />
+                                {/* Add other types as needed */}
+                            </select>
+                            {formik.touched.type && formik.errors.type ? (
+                                <div className="text-red-500 mt-2">{formik.errors.type}</div>
                             ) : null}
                         </div>
                     </div>
@@ -81,74 +85,86 @@ const AddAgentForm: React.FC = () => {
                     <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                         <div className="w-full xl:w-1/2">
                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                Email <span className="text-meta-1">*</span>
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email address"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.email}
-                                className={`w-full rounded border-[1.5px] ${formik.touched.email && formik.errors.email ? "border-red-500" : "border-stroke"
-                                    } bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                            />
-                            {formik.touched.email && formik.errors.email ? (
-                                <div className="text-red-500 mt-2">{formik.errors.email}</div>
-                            ) : null}
-                        </div>
-
-
-                        <div className="w-full xl:w-1/2">
-                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                ID
+                                Breed
                             </label>
                             <input
                                 type="text"
-                                name="id"
-                                placeholder="Enter your ID"
+                                name="breed"
+                                placeholder="Enter Breed"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.id}
-                                className={`w-full rounded border-[1.5px] ${formik.touched.id && formik.errors.id ? "border-red-500" : "border-stroke"
-                                    } bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                                value={formik.values.breed}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.breed && formik.errors.breed ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
                             />
-                            {formik.touched.id && formik.errors.id ? (
-                                <div className="text-red-500 mt-2">{formik.errors.id}</div>
+                            {formik.touched.breed && formik.errors.breed ? (
+                                <div className="text-red-500 mt-2">{formik.errors.breed}</div>
+                            ) : null}
+                        </div>
+                        <div className="w-full xl:w-1/2">
+                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                Weight (kg)
+                            </label>
+                            <input
+                                type="number"
+                                name="weight"
+                                placeholder="Enter Weight"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.weight}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.weight && formik.errors.weight ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                            />
+                            {formik.touched.weight && formik.errors.weight ? (
+                                <div className="text-red-500 mt-2">{formik.errors.weight}</div>
                             ) : null}
                         </div>
                     </div>
+                    <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                        <div className="w-full xl:w-1/2">
+                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                Age (years)
+                            </label>
+                            <input
+                                type="number"
+                                name="age"
+                                placeholder="Enter Age"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.age}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.age && formik.errors.age ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                            />
+                            {formik.touched.age && formik.errors.age ? (
+                                <div className="text-red-500 mt-2">{formik.errors.age}</div>
+                            ) : null}
+                        </div>
+                        <div className="w-full xl:w-1/2">
+                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                Health Status
+                            </label>
+                            <input
+                                type="text"
+                                name="healthStatus"
+                                placeholder="Enter Health Status"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.healthStatus}
+                                className={`w-full rounded border-[1.5px] ${formik.touched.healthStatus && formik.errors.healthStatus ? "border-red-500" : "border-stroke"} bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
+                            />
+                            {formik.touched.healthStatus && formik.errors.healthStatus ? (
+                                <div className="text-red-500 mt-2">{formik.errors.healthStatus}</div>
+                            ) : null}
+                        </div>
 
-                    <div className="mb-4.5">
-                        <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                            Phone
-                        </label>
-                        <input
-                            type="text"
-                            name="phone"
-                            placeholder="Enter your phone number"
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.phone}
-                            className={`w-full rounded border-[1.5px] ${formik.touched.phone && formik.errors.phone ? "border-red-500" : "border-stroke"
-                                } bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary`}
-                        />
-                        {formik.touched.phone && formik.errors.phone ? (
-                            <div className="text-red-500 mt-2">{formik.errors.phone}</div>
-                        ) : null}
                     </div>
-
                     <div className="mb-4.5">
                         <DatePickerOne
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.startDate}
+                            value={formik.values.acquisitionDate}
                         />
-                        {formik.touched.startDate && formik.errors.startDate ? (
-                            <div className="text-red-500 mt-2">{formik.errors.startDate}</div>
+                        {formik.touched.acquisitionDate && formik.errors.acquisitionDate ? (
+                            <div className="text-red-500 mt-2">{formik.errors.acquisitionDate}</div>
                         ) : null}
                     </div>
-
                     <button
                         type="submit"
                         className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
@@ -161,4 +177,4 @@ const AddAgentForm: React.FC = () => {
     );
 };
 
-export default AddAgentForm;
+export default AddLivestockForm;
