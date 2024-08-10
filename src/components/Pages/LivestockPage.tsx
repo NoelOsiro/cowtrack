@@ -1,6 +1,7 @@
 import React from 'react'
 import CardDataStats from '../Cards/CardDataStats'
 import AddLivestockForm from '../Forms/AddAgentForm';
+import CustomersTable from '../Tables/RoutersTable';
 
 
 function EyeSvg() {
@@ -11,9 +12,55 @@ function EyeSvg() {
         </svg>
     );
 }
+
+const livestockData = [
+    {
+        id: 1,
+        name: "Cow",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+    {
+        id: 2,
+        name: "Goat",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+    {
+        id: 3,
+        name: "Sheep",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+    {
+        id: 4,
+        name: "Pig",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+    {
+        id: 5,
+        name: "Chicken",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+    {
+        id: 6,
+        name: "Turkey",
+        count: 23,
+        average: 23,
+        todayCount: 23
+    },
+]
 const LivestockPage = () => {
     return (
         <>
+        <CustomersTable livestock={livestockData}/>
         <div className="grid grid-cols-1 gap-9 sm:grid-cols-3 mt-9 mb-4">
             <CardDataStats title="Total count" total="2623" rate="0.43%" levelUp>
                 <EyeSvg />

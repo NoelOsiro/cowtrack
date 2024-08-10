@@ -1,23 +1,23 @@
 'use client';
 import { useState } from "react";
-import { ROUTER } from "@/types/router";
 import Pagination from "./Pagination";
 import SearchBar from "../FormElements/SearchBar";
 import RouterRow from "./RouterRow";
 import EditRouterModal from "./RoutersModal";
 import Loader from "../common/Loader";
+import { LIVESTOCK } from "@/src/types/router";
 
 interface Props {
-  router: ROUTER[] | null;
+  livestock: LIVESTOCK[] | null;
 }
 
 const CustomersTable = (props: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRouuter, setselectedRouuter] = useState<ROUTER | null>(null);
+  const [selectedRouuter, setselectedRouuter] = useState<LIVESTOCK | null>(null);
   const itemsPerPage = 10;
 
-  if (!props.router) {
+  if (!props.livestock) {
     return (
       <div className="flex items-center justify-center w-full h-96">
         <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 w-full">
@@ -27,10 +27,10 @@ const CustomersTable = (props: Props) => {
     );
   }
 
-  const filteredRouters = props.router.filter(
-    (router) =>
-      router.odu_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      router.account_number.includes(searchQuery)
+  const filteredRouters = props.livestock.filter(
+    (livestock) =>
+      livestock.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      livestock.name.includes(searchQuery)
   );
 
   const totalPages = Math.ceil(filteredRouters.length / itemsPerPage);
@@ -40,11 +40,11 @@ const CustomersTable = (props: Props) => {
     currentPage * itemsPerPage
   );
 
-  const handleEdit = (router: ROUTER) => {
+  const handleEdit = (router: LIVESTOCK) => {
     setselectedRouuter(router);
   };
 
-  const handleSave = async (updatedRouter: ROUTER) => {
+  const handleSave = async (updatedRouter: LIVESTOCK) => {
     try {
       const response = await fetch(`/api/routers/${updatedRouter.id}?id=${updatedRouter.id}`, {
         method: "POST",
@@ -80,7 +80,7 @@ const CustomersTable = (props: Props) => {
         </div>
 
         {displayedRouters.map((customer, key) => (
-          <RouterRow router={customer} onEdit={handleEdit} key={key} />
+          <RouterRow livestock={customer} onEdit={handleEdit} key={key} />
         ))}
       </div>
 

@@ -1,6 +1,7 @@
-export interface ROUTER {
-    id: 1,
-    created_at: string;
-    odu_number: string;
-    account_number: string;
+export interface LIVESTOCK {
+    id: number,
+    name: string,
+    count: number,
+    average: number,
+    todayCount: number
 }
