@@ -3,13 +3,8 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
-import Feather from '@expo/vector-icons/Feather';
-
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { TouchableOpacity, View } from 'react-native';
-import renderHeaderIcons from '@/components/drawer/renderHeaderIcons';
+import { Stack } from 'expo-router';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,25 +28,14 @@ export default function RootLayout() {
   return (
 
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
+      <Stack
       screenOptions={{
-        headerRight: () => (
-          renderHeaderIcons()
-        ),
-      }
-      }
+        headerShown:  false
+      }}
       >
-        {/* <Drawer.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-        <Drawer.Screen
-          name="details" 
-          options={{
-            drawerLabel: 'Home',
-            title: 'Overview',
-          }}/>
-        <Drawer.Screen name="+not-found" />
-      </Drawer>
-      </GestureHandlerRootView>
+        <Stack.Screen name="+not-found" />
+        <Stack.Screen name="onboarding" />
+      </Stack>
       
     </ThemeProvider>
   );
