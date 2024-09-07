@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, Animated, ScrollView, Platform } from 'react-native'
 import React, { useRef } from 'react'
 import { COLORS, FONTS, SIZES } from '@/constants'
-import { NavBar } from './NavBar'
-import { Header } from './Header'
-import { CategoryHeaderSection } from './CategoryHeaderSection'
-import { CategoryList} from './CategoryList'
-import { FarmPopulation} from './AnimalCount'
-import { categoriesData, Category } from './categoriesData'
-import { FarmSummary} from './FarmSummary'
-import RenderChart from './renderChart'
+import { NavBar } from '@/components/NavBar'
+import { Header } from '@/components/Header'
+
+import { FarmPopulation} from '@/components/AnimalCount'
+
+import { FarmSummary} from '@/components/FarmSummary'
+import RenderChart from '@/components/RenderChart'
+import { CategoryHeaderSection } from '@/components/CategoryHeaderSection'
+import { CategoryList } from '@/components/CategoryList'
+import { categoriesData, Category } from '@/constants/categoriesData'
 
 type Props = {}
 

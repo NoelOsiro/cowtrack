@@ -1,4 +1,4 @@
-import { Animal, Category } from "./categoriesData";
+import { Animal, Category } from "../constants/categoriesData";
 
 export function processCategoryDataToDisplay(categories: Category[]) {
     // Filter expenses with "Confirmed" status

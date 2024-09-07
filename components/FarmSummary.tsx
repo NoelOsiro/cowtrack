@@ -2,9 +2,10 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SIZES, COLORS, FONTS } from "@/constants";
-import { setSelectCategoryByName } from "./home";
+import { setSelectCategoryByName } from "../app/home";
 import { processCategoryDataToDisplay } from "./processCategoryDataToDisplay";
-import { Category } from "./categoriesData";
+import { Category } from '@/constants/categoriesData';
+
 
 interface FarmSummaryProps {
     selectedCategory: any;

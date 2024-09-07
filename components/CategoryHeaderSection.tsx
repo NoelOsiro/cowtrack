@@ -2,7 +2,7 @@ import { SIZES, COLORS, FONTS, icons } from "@/constants";
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Category } from "./categoriesData";
+import { Category } from "../constants/categoriesData";
 
 // Interface for props
 interface HeaderSectionProps {

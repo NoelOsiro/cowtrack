@@ -3,9 +3,9 @@ import { Platform, View, Text, StyleSheet } from 'react-native';
 import Svg from 'react-native-svg';
 import { VictoryPie, } from 'victory-native';
 import { SIZES, FONTS } from '@/constants';
-import { setSelectCategoryByName } from './home';
+import { setSelectCategoryByName } from '../app/home';
 import { processCategoryDataToDisplay } from './processCategoryDataToDisplay';
-import { Category } from './categoriesData';
+import { Category } from '../constants/categoriesData';
 
 type Props = {
     categories: Category[];
@@ -30,7 +30,7 @@ const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Prop
                         innerRadius={70}
                         labelRadius={() => (SIZES.width * 0.4 + 70) / 2.5}
                         style={{
-                            labels: { fill: "black" ,fontSize: 20,fontWeight: 'bold'},
+                            labels: { fill: "white" ,fontSize: 16,fontWeight: 'bold'},
                             
                         }}
                         width={SIZES.width}
@@ -71,7 +71,7 @@ const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Prop
                         innerRadius={70}
                         labelRadius={() => (SIZES.width * 0.4 + 70) / 2.5}
                         style={{
-                            labels: { fill: "black" ,fontSize: 20,fontWeight: 'bold'},
+                            labels: { fill: "white" ,fontSize: 16,fontWeight: 'bold'},
                             
                         }}
                         width={SIZES.width}

@@ -1,8 +1,8 @@
 import { SIZES, COLORS, FONTS, icons } from "@/constants";
 import React from 'react';
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native';
-import { Category, Animal } from "./categoriesData";
-import { renderIncomingAnimalsTitle } from "./home";
+import { Category, Animal } from "../constants/categoriesData";
+import { renderIncomingAnimalsTitle } from "../app/home";
 
 
 // Interface for props

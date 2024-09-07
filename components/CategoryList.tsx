@@ -1,7 +1,7 @@
 import { SIZES, COLORS, FONTS, icons } from "@/constants";
 import React from 'react';
 import { View, Image, Animated, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Category } from "./categoriesData";
+import { Category } from "../constants/categoriesData";
 
 // Interface for props
 interface CategoryListProps {
