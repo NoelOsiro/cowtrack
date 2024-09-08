@@ -3,20 +3,22 @@ import { useNavigation } from "expo-router";
 import React, { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-// Render the navigation bar component
+
 
 function AddCategory() {
-    return (<View style={navbarStyles.dropdown}>
-        <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 1')}>
-            <Text style={navbarStyles.dropdownText}>Add Category</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 2')}>
-            <Text style={navbarStyles.dropdownText}>Option 2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 3')}>
-            <Text style={navbarStyles.dropdownText}>Option 3</Text>
-        </TouchableOpacity>
-    </View>);
+    return (
+        <View style={navbarStyles.dropdown}>
+            <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 1')}>
+                <Text style={navbarStyles.dropdownText}>Add Category</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 2')}>
+                <Text style={navbarStyles.dropdownText}>Option 2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={navbarStyles.dropdownItem} onPress={() => console.log('Option 3')}>
+                <Text style={navbarStyles.dropdownText}>Option 3</Text>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 
@@ -60,7 +62,7 @@ export const NavBar = () => {
     );
 };
 
-// Styles for the navigation bar
+
 const navbarStyles = StyleSheet.create({
     container: {
         flexDirection: 'row',
@@ -70,7 +72,7 @@ const navbarStyles = StyleSheet.create({
         paddingHorizontal: SIZES.padding,
         backgroundColor: COLORS.white,
         paddingBottom: 10,
-        position: 'relative', // Important for positioning the dropdown
+        position: 'relative', 
     },
     backButton: {
         justifyContent: 'center',
@@ -88,7 +90,7 @@ const navbarStyles = StyleSheet.create({
     },
     dropdown: {
         position: 'absolute',
-        top: 80, // Adjust this value to position the dropdown below the navbar
+        top: 80, 
         right: 0,
         backgroundColor: COLORS.white,
         borderColor: COLORS.gray,
@@ -98,8 +100,8 @@ const navbarStyles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        width: 150, // Adjust this value as needed
-        zIndex: 10, // Ensure the dropdown is above other elements
+        width: 150, 
+        zIndex: 10, 
     },
     dropdownItem: {
         padding: SIZES.base,

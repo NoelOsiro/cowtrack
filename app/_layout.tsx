@@ -1,4 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -33,8 +34,8 @@ export default function RootLayout() {
   }
 
   return (
-
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+<RootSiblingParent>
+<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack
       screenOptions={{
         headerShown:  false
@@ -42,9 +43,12 @@ export default function RootLayout() {
       >
         <Stack.Screen name="home" />
         <Stack.Screen name="category" />
+        <Stack.Screen name="items" />
       </Stack>
       
     </ThemeProvider>
+</RootSiblingParent>
+    
   );
 }
 

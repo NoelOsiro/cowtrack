@@ -83,6 +83,7 @@ export const FarmPopulation = ({ selectedCategory }: IncomingAnimalsProps) => {
 const styles = StyleSheet.create({
     itemContainer: {
         width: 300,
+        justifyContent: 'center',
         marginRight: SIZES.padding,
         marginVertical: SIZES.radius,
         borderRadius: SIZES.radius,

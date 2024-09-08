@@ -1,10 +1,10 @@
-import AddCategoryForm from '@/components/Forms/AddCategoryForm';
 import { CategoryHeader } from '@/components/Headers/CategoryHeader';
 import EditCategoryList from '@/components/Lists/EditCategoryList';
 import { NavBar } from '@/components/NavBar';
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import icons from '@/constants/icons'; // Import icons from icons.ts
+import AddItemForm from '@/components/Forms/AddItemForm';
 
 
 
@@ -27,11 +27,11 @@ const Category = (props: Props) => {
       <NavBar />
 
       {/* Header section */}
-      <CategoryHeader onAddCategory={handleAddCategory} onEditCategory={handleEditCategory} title={'Categories'} subtitle={'Add or Edit categories'} />
+      <CategoryHeader onAddCategory={handleAddCategory} onEditCategory={handleEditCategory} title={'Items'} subtitle={'Add/Edit items'} />
 
       {/* Scrollable content section for Add/Edit Category */}
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {action === 'add' && <AddCategoryForm />}  {/* Show Add Category Form */}
+        {action === 'add' && <AddItemForm />}  {/* Show Add Category Form */}
         {action === 'edit' && <EditCategoryList />}  {/* Show Edit Category List */}
       </ScrollView>
     </View>

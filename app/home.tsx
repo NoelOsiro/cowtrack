@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Animated, ScrollView, Platform } from 'react-na
 import React, { useRef } from 'react'
 import { COLORS, FONTS, SIZES } from '@/constants'
 import { NavBar } from '@/components/NavBar'
-import { Header } from '@/components/Header'
+import { Header } from '@/components/Headers/Header'
 
 import { FarmPopulation} from '@/components/AnimalCount'
 

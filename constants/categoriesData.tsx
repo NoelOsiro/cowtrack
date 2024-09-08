@@ -19,6 +19,7 @@ export type Animal = {
 export type Category = {
     id: number;
     name: string;
+    breeds: string[];
     icon: typeof icons[keyof typeof icons];
     color: typeof COLORS[keyof typeof COLORS];
     animals: Animal[];
@@ -31,6 +32,7 @@ export const categoriesData: Category[] = [
         name: "Cow",
         icon: icons.baby_car,
         color: COLORS.purple,
+        breeds: ["Angus", "Holstein", "Hereford", "Jersey"],
         animals: [
             { id: 1, animalType: "Cow", breed: "Angus", count: 50, location: "Field A", healthStatus: healthyStatus },
             { id: 2, animalType: "Cow", breed: "Holstein", count: 30, location: "Field B", healthStatus: sickStatus },
@@ -41,6 +43,7 @@ export const categoriesData: Category[] = [
         name: "Chicken",
         icon: icons.down_arrow,
         color: COLORS.peach,
+        breeds: ["Broiler", "Layer"],
         animals: [
             { id: 3, animalType: "Chicken", breed: "Broiler", count: 200, location: "Chicken Coop 1", healthStatus: healthyStatus },
             { id: 4, animalType: "Chicken", breed: "Layer", count: 150, location: "Chicken Coop 2", healthStatus: healthyStatus },
@@ -54,6 +57,7 @@ export const categoriesData: Category[] = [
         name: "Sheep",
         icon: icons.education,
         color: COLORS.darkgreen,
+        breeds: ["Merino", "Suffolk", "Dorper", "Southdown"],
         animals: [
             { id: 5, animalType: "Sheep", breed: "Merino", count: 75, location: "Field C", healthStatus: healthyStatus },
             { id: 6, animalType: "Sheep", breed: "Suffolk", count: 60, location: "Field D", healthStatus: sickStatus },
@@ -64,6 +68,7 @@ export const categoriesData: Category[] = [
         name: "Pigs",
         icon: icons.calendar,
         color: COLORS.blue,
+        breeds: ["Yorkshire", "Duroc", "Hampshire", "Berkshire"],
         animals: [
             { id: 7, animalType: "Pigs", breed: "Yorkshire", count: 40, location: "Pigsty A", healthStatus: healthyStatus },
             { id: 8, animalType: "Pigs", breed: "Duroc", count: 35, location: "Pigsty B", healthStatus: healthyStatus },
@@ -74,6 +79,7 @@ export const categoriesData: Category[] = [
         name: "Goats",
         icon: icons.chart,
         color: COLORS.red,
+        breeds: ["Boer", "Alpine", "Nubian", "LaMancha"],
         animals: [
             { id: 9, animalType: "Goats", breed: "Boer", count: 20, location: "Barn A", healthStatus: healthyStatus },
             { id: 10, animalType: "Goats", breed: "Alpine", count: 18, location: "Barn B", healthStatus: sickStatus },
@@ -84,6 +90,7 @@ export const categoriesData: Category[] = [
         name: "Horses",
         icon: icons.food,
         color: COLORS.primary,
+        breeds: ["Thoroughbred", "Quarter", "Appaloosa", "Mustang", "Arabian"],
         animals: [
             { id: 11, animalType: "Horses", breed: "Thoroughbred", count: 10, location: "Stable A", healthStatus: healthyStatus },
             { id: 12, animalType: "Horses", breed: "Quarter", count: 8, location: "Stable B", healthStatus: healthyStatus },

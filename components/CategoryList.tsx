@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
         margin: 5,
         paddingVertical: SIZES.radius,
         paddingHorizontal: SIZES.padding,
+        justifyContent: 'center',
         borderRadius: 5,
         backgroundColor: COLORS.white,
         shadowColor: COLORS.lightGray,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
         ...FONTS.h4
     },
     flatListContent: {
-        alignItems: 'center', // Center items vertically
+        alignItems: 'stretch', // Center items vertically
         paddingVertical: 10,
     },
     toggleButton: {
