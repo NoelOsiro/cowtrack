@@ -1,9 +1,13 @@
 import { SIZES, COLORS, FONTS, icons } from "@/constants";
+import { format } from "date-fns";
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 
+const today = new Date();
+const formattedDate = format(today, 'dd MMM, yyyy');
 // Render the header component
 export const Header = ()=> {
+    
     return (
         <View style={headerStyles.container}>
             {/* Header Title */}
@@ -22,7 +26,8 @@ export const Header = ()=> {
                 </View>
 
                 <View style={headerStyles.dateInfo}>
-                    <Text style={headerStyles.date}>11 Nov, 2020</Text>
+
+                    <Text style={headerStyles.date}>{formattedDate} </Text>
                     <Text style={headerStyles.info}>18% more than last month</Text>
                 </View>
             </View>

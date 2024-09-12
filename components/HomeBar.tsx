@@ -1,21 +1,27 @@
 import { SIZES, COLORS, icons, FONTS } from "@/constants";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import React, { useState } from 'react';
 import { View, Image, Text, StyleSheet, Pressable } from 'react-native';
+import { Link } from 'expo-router';
 
 
 
 function AddCategory() {
+    const navigation = useNavigation();
     return (
         <View style={navbarStyles.dropdown}>
+            {/* navigation to add category page onpress */}
+
             <Link href="/category" asChild>
             <Pressable style={navbarStyles.dropdownItem} >
                 <Text style={navbarStyles.dropdownText}>🪓 Categories</Text>
             </Pressable>
             </Link>
+            
             <Pressable style={navbarStyles.dropdownItem} onPress={() => console.log('Option 2')}>
-                <Text style={navbarStyles.dropdownText}>📄 Profile</Text>
+                <Text style={navbarStyles.dropdownText}>Option 2</Text>
             </Pressable>
+            
             {/* <Link href="/settings" asChild> */}
             <Pressable style={navbarStyles.dropdownItem}>
                 <Text style={navbarStyles.dropdownText}>⚙️ Settings</Text>
@@ -25,7 +31,7 @@ function AddCategory() {
 }
 
 
-export const NavBar = () => {
+export const HomeBar = () => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const navigation = useNavigation();
 
@@ -41,7 +47,7 @@ export const NavBar = () => {
                 onPress={() => navigation.goBack()}
             >
                 <Image
-                    source={icons.back_arrow}
+                    source={icons.menu}
                     style={navbarStyles.icon}
                 />
             </Pressable>
@@ -102,7 +108,7 @@ const navbarStyles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4, 
+        shadowRadius: 4,
         width: 250, 
         zIndex: 10,
         padding: SIZES.base,

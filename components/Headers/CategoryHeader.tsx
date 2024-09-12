@@ -49,7 +49,7 @@ const headerStyles = StyleSheet.create({
         paddingHorizontal: SIZES.padding,
         paddingVertical: SIZES.padding,
         backgroundColor: COLORS.white,
-        zIndex: 1,
+        zIndex: -2,
     },
     title: {
         color: COLORS.primary,

@@ -24,7 +24,7 @@ const EditCategoryList = () => {
         setCategoryIcon
     } = useCategoryStore();
 
-    const categoryListHeightAnimationValue = new Animated.Value(145);
+    const categoryListHeightAnimationValue = new Animated.Value(200);
 
     const handleSelectCategory = (category: Category) => {
         setSelectedCategory(category);
@@ -44,6 +44,7 @@ const EditCategoryList = () => {
         } else {
             const newCategory: Category = {
                 id: categories.length + 1,
+                breeds: [],
                 name: categoryName,
                 icon: icons[categoryIcon as keyof typeof icons],
                 color: categoryColor,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     noRecordContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        height: 300,
+        height: 200,
       },
 });
 

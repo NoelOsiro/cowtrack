@@ -14,6 +14,13 @@ const icons: Record<string, any> = {
     transport: require("../assets/icons/chart_icon.png"),
     sports_icon: require("../assets/icons/sports_icon.png"),
     up_arrow: require("../assets/icons/up_arrow.png"),
+    cow: require("../assets/icons/cow.png"),
+    goat: require("../assets/icons/goat.png"),
+    bull: require("../assets/icons/upset.png"),
+    sheep: require("../assets/icons/sheep.png"),
+    chicken: require("../assets/icons/chicken.png"),
+    pig: require("../assets/icons/pig.png"),
+    bee: require("../assets/icons/beehive.png"),
   };
   
   export default icons;

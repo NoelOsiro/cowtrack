@@ -30,7 +30,7 @@ export const categoriesData: Category[] = [
     {
         id: 1,
         name: "Cow",
-        icon: icons.baby_car,
+        icon: icons.cow,
         color: COLORS.purple,
         breeds: ["Angus", "Holstein", "Hereford", "Jersey"],
         animals: [
@@ -41,7 +41,7 @@ export const categoriesData: Category[] = [
     {
         id: 2,
         name: "Chicken",
-        icon: icons.down_arrow,
+        icon: icons.chicken,
         color: COLORS.peach,
         breeds: ["Broiler", "Layer"],
         animals: [
@@ -55,7 +55,7 @@ export const categoriesData: Category[] = [
     {
         id: 3,
         name: "Sheep",
-        icon: icons.education,
+        icon: icons.sheep,
         color: COLORS.darkgreen,
         breeds: ["Merino", "Suffolk", "Dorper", "Southdown"],
         animals: [
@@ -66,7 +66,7 @@ export const categoriesData: Category[] = [
     {
         id: 4,
         name: "Pigs",
-        icon: icons.calendar,
+        icon: icons.pig,
         color: COLORS.blue,
         breeds: ["Yorkshire", "Duroc", "Hampshire", "Berkshire"],
         animals: [
@@ -77,7 +77,7 @@ export const categoriesData: Category[] = [
     {
         id: 5,
         name: "Goats",
-        icon: icons.chart,
+        icon: icons.goat,
         color: COLORS.red,
         breeds: ["Boer", "Alpine", "Nubian", "LaMancha"],
         animals: [

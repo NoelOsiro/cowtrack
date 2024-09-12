@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Platform, View, Text, StyleSheet } from 'react-native';
 import Svg from 'react-native-svg';
 import { VictoryPie, } from 'victory-native';
 import { SIZES, FONTS } from '@/constants';
-import { setSelectCategoryByName } from '../app/home';
+import { setSelectCategoryByName } from '@/utils/setSelectCategoryByName';
 import { processCategoryDataToDisplay } from './processCategoryDataToDisplay';
 import { Category } from '../constants/categoriesData';
 
 type Props = {
     categories: Category[];
-    selectedCategory: any;
+    selectedCategory: Category | null;
     setSelectedCategory: React.Dispatch<React.SetStateAction<Category|null>>;
+    count: number | null;
 };
 
-const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Props) => {
+
+const RenderChart = ({ categories, selectedCategory, setSelectedCategory,count }: Props) => {
     const chartData = processCategoryDataToDisplay(categories);
     const colorScales = chartData.map(item => item.color);
-    const totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0);
 
     const chartView = Platform.OS === 'ios' ? (
         <View  style={styles.container}>
@@ -54,8 +55,8 @@ const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Prop
                     />
                 </Svg>
                 <View style={styles.totalExpensesContainer}>
-                    <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-                    <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                    <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{count}</Text>
+                    <Text style={{ ...FONTS.body3, textAlign: 'center' }}>{selectedCategory?.name}</Text>
                 </View>
             </View>
         
@@ -95,8 +96,8 @@ const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Prop
                     />
                 </Svg>
                 <View style={styles.totalExpensesContainer}>
-                    <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-                    <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                    <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{count}</Text>
+                    <Text style={{ ...FONTS.body3, textAlign: 'center' }}>{selectedCategory?.name}</Text>
                 </View>
             </View>
     );
@@ -105,8 +106,8 @@ const RenderChart = ({ categories, selectedCategory, setSelectedCategory }: Prop
         <View style={styles.container}>
             {chartView}
             <View style={styles.totalExpensesContainer}>
-                <Text style={FONTS.h1}>{totalExpenseCount}</Text>
-                <Text style={FONTS.body3}>Expenses</Text>
+                <Text style={FONTS.h1}>{count}</Text>
+                <Text style={{ ...FONTS.body3, textAlign: 'center' }}>{selectedCategory?.name}</Text>
             </View>
         </View>
     );

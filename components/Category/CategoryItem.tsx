@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
+        height: 60,
         margin: 5,
         paddingVertical: SIZES.radius,
         paddingHorizontal: SIZES.padding,
@@ -45,13 +47,13 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     icon: {
-        width: 20,
-        height: 20,
+        width: 32,
+        height: 32,
     },
     itemText: {
         marginLeft: SIZES.base,
         color: COLORS.primary,
-        ...FONTS.h4
+        ...FONTS.h3
     },
 });
 

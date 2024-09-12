@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     listView: {
         flex: 1,
         padding: 10,
-        maxHeight: 200,
+        maxHeight: 500,
     },
     flatListContent: {
 

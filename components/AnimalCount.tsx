@@ -2,7 +2,8 @@ import { SIZES, COLORS, FONTS, icons } from "@/constants";
 import React from 'react';
 import { View, Image, FlatList, Text, StyleSheet } from 'react-native';
 import { Category, Animal } from "../constants/categoriesData";
-import { renderIncomingAnimalsTitle } from "../app/home";
+import { renderIncomingAnimalsTitle } from "@/utils/renderIncomingTitles";
+
 
 
 // Interface for props
@@ -39,8 +40,8 @@ export const FarmPopulation = ({ selectedCategory }: IncomingAnimalsProps) => {
 
             {/* Expense Description */}
             <View style={styles.descriptionContainer}>
-                <Text style={FONTS.h2}>{item.animalType}</Text>
-                <Text style={[FONTS.body3, { color: COLORS.darkgray }]}>{item.breed}</Text>
+                <Text style={[FONTS.h2,{marginBottom:SIZES.base}]}>{item.animalType}</Text>
+                <Text style={[FONTS.body3, { color: COLORS.darkgray,marginBottom:SIZES.base }]}>{item.breed}</Text>
                 <Text style={FONTS.h4}>Location</Text>
                 <View style={styles.locationContainer}>
                     <Image
@@ -53,7 +54,7 @@ export const FarmPopulation = ({ selectedCategory }: IncomingAnimalsProps) => {
 
             {/* Price */}
             <View style={[styles.priceContainer, { backgroundColor: selectedCategory?.color }]}>
-                <Text style={[FONTS.body3, { color: COLORS.white }]}>CONFIRM {item.count.toFixed(2)} USD</Text>
+                <Text style={[FONTS.body3, { color: COLORS.white }]}>Count: {item.count} </Text>
             </View>
         </View>
     );
@@ -120,7 +121,8 @@ const styles = StyleSheet.create({
     },
     locationContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom:SIZES.base
     },
     pinIcon: {
         width: 20,

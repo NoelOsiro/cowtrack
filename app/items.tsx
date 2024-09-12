@@ -10,7 +10,7 @@ import AddItemForm from '@/components/Forms/AddItemForm';
 
 type Props = {};
 
-const Category = (props: Props) => {
+const Items = (props: Props) => {
   const [action, setAction] = useState<'add' | 'edit' | null>(null); // State to manage whether we're adding or editing a category
 
   const handleAddCategory = () => {
@@ -48,4 +48,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default Category;
+export default Items;

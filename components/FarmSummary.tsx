@@ -2,9 +2,10 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SIZES, COLORS, FONTS } from "@/constants";
-import { setSelectCategoryByName } from "../app/home";
+
 import { processCategoryDataToDisplay } from "./processCategoryDataToDisplay";
 import { Category } from '@/constants/categoriesData';
+import { setSelectCategoryByName } from '@/utils/setSelectCategoryByName';
 
 
 interface FarmSummaryProps {
@@ -46,7 +47,7 @@ export function FarmSummary({ selectedCategory, categories, setSelectedCategory 
                     styles.expensesText,
                     { color: (selectedCategory && selectedCategory.name === item.name) ? COLORS.white : COLORS.primary }
                 ]}>
-                    Count: {item.y}  - {item.label}
+                    Count: {item.count}  - {item.label}
                 </Text>
             </View>
         </TouchableOpacity>
