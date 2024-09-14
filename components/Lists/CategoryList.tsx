@@ -1,7 +1,18 @@
 import { SIZES, COLORS, FONTS, icons } from "@/constants";
 import React from 'react';
-import { View, Image, Animated, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Category } from "../../constants/categoriesData";
+import { View, Image, Animated, FlatList, Text, StyleSheet, Pressable } from 'react-native';
+
+
+// Define the type for the icons keys
+type IconKeys = keyof typeof icons;
+
+// Extend the Category interface to include the icon property with the correct type
+interface Category {
+    id: number;
+    name: string;
+    icon: IconKeys;
+    color: string;
+}
 
 // Interface for props
 interface CategoryListProps {
@@ -17,36 +28,34 @@ export const CategoryList = ({
     categories, 
     setSelectedCategory, 
     categoryListHeightAnimationValue, 
-    showMoreToggle, 
+    showMoreToggle,
     setShowMoreToggle
 }: CategoryListProps) => {
     // Render item for the FlatList
-    const renderItem = ({ item }: { item: Category }) => (
-        <TouchableOpacity
+    const renderItem = (item :Category,index:number ) => (
+        <Pressable
+        key={index}
             onPress={() => setSelectedCategory(item)}
             style={styles.itemContainer}
         >
             <Image
-                source={item.icon}
+                source={icons[item.icon]}
                 style={[styles.icon, { tintColor: item.color }]}
             />
             <Text style={styles.itemText}>{item.name}</Text>
-        </TouchableOpacity>
+        </Pressable>
     );
 
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.animatedContainer, { height: categoryListHeightAnimationValue }]}>
-                <FlatList
-                    data={categories}
-                    renderItem={renderItem}
-                    keyExtractor={(item: Category) => `${item.id}`}
-                    numColumns={2}
-                    contentContainerStyle={styles.flatListContent}
-                />
+
+            <View style={styles.categoryContainer}>
+                    {categories.map((item,index) => renderItem(item,index))}
+                </View>
             </Animated.View>
 
-            <TouchableOpacity
+            <Pressable
                 style={styles.toggleButton}
                 onPress={() => {
                     const newHeight = showMoreToggle ? 145 : 182.5;
@@ -63,7 +72,7 @@ export const CategoryList = ({
                     source={showMoreToggle ? icons.up_arrow : icons.down_arrow}
                     style={styles.toggleIcon}
                 />
-            </TouchableOpacity>
+            </Pressable>
         </View>
     );
 };
@@ -76,8 +85,13 @@ const styles = StyleSheet.create({
     animatedContainer: {
         // Initial height set by the Animated.Value
     },
+    categoryContainer: {
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
     itemContainer: {
-        flex: 1,
+        width: '48%', // Adjust for two columns
         flexDirection: 'row',
         margin: 5,
         paddingVertical: SIZES.radius,
@@ -102,10 +116,6 @@ const styles = StyleSheet.create({
         marginLeft: SIZES.base,
         color: COLORS.primary,
         ...FONTS.h4
-    },
-    flatListContent: {
-        alignItems: 'stretch', // Center items vertically
-        paddingVertical: 10,
     },
     toggleButton: {
         flexDirection: 'row',

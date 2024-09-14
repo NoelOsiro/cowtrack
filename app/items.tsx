@@ -31,8 +31,8 @@ const Items = (props: Props) => {
 
       {/* Scrollable content section for Add/Edit Category */}
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {action === 'add' && <AddItemForm />}  {/* Show Add Category Form */}
-        {action === 'edit' && <EditCategoryList />}  {/* Show Edit Category List */}
+        {action === 'add' && <AddItemForm />}  
+        {action === 'edit' && <EditCategoryList />}  
       </ScrollView>
     </View>
   );

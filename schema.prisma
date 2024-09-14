@@ -1,0 +1,42 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["reactNative"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./farm.db"
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String  
+  icon  String  
+  color String  
+  animals Animal[]
+}
+
+model Breed {
+  id    Int     @id @default(autoincrement())
+  name  String  
+  animals Animal[]
+}
+
+model Location {
+  id    Int     @id @default(autoincrement())
+  name  String  
+  animals Animal[]
+}
+
+model Animal {
+  id            Int       @id @default(autoincrement())
+  animalType    String    
+  breedId       Int?
+  count         Int
+  locationId    Int?
+  healthStatus  String    
+  categoryId    Int? 
+  category      Category? @relation(fields: [categoryId], references: [id])
+  breed         Breed?    @relation(fields: [breedId], references: [id])
+  location      Location? @relation(fields: [locationId], references: [id])
+}

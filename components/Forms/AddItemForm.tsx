@@ -108,7 +108,8 @@ const AddItemForm = () => {
 
                     {/* Render animal fields dynamically based on selected category */}
                     {values.animals.length > 0 && (
-                        <FlatList
+                        <View>
+                            <FlatList
                             data={values.animals}
                             renderItem={({ item }) => (
                                 <View style={styles.animalContainer}>
@@ -141,6 +142,8 @@ const AddItemForm = () => {
                             keyExtractor={(item) => item.id.toString()}
                             contentContainerStyle={styles.animalListContainer}
                         />
+                        </View>
+                        
                     )}
 
                     <TouchableOpacity style={styles.saveButton} onPress={() => handleSubmit()}>

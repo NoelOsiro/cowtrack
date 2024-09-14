@@ -1,11 +1,17 @@
 import React, { useEffect } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput as RNTextInput } from 'react-native';
+import { View, Image, Text, StyleSheet, Pressable, TextInput as RNTextInput, Animated } from 'react-native';
 import { Picker as RNPicker } from '@react-native-picker/picker';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { SIZES, COLORS, FONTS, icons } from '@/constants';
-import { Category } from '@/constants/categoriesData';
 import useCategoryStore from '@/store/useCategoryStore';
+import { Animal } from '@/constants/categoriesData';
+import CategoryNameInput from './CategoryNameInput';
+import ColorPicker from './ColorPicker';
+import IconPicker from './IconPicker';
+import renderCategoryPreview from '../Preview/CategoryPreview';
+
+import { animalIcons } from '@/constants/icons';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -14,14 +20,17 @@ const validationSchema = Yup.object().shape({
 });
 
 interface EditCategoryProps {
-  onSave: (values: { name: string; color: string; icon: string }) => void;
+  onSave: ( name: string, color: string, icon: string,animals:Animal[] ) => Promise<void>; // Handle async saving
 }
 
 const EditCategory = ({ onSave }: EditCategoryProps) => {
-  const { selectedCategory } = useCategoryStore();
+  const [inputAnim] = React.useState(new Animated.Value(1));
 
-  useEffect(() => {
-  }, [selectedCategory]);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const { selectedCategory,setSelectedCategory } = useCategoryStore();
+  const { deleteCategory } = useCategoryStore();
+
+  useEffect(() => {}, [selectedCategory]);
 
   if (!selectedCategory) {
     return (
@@ -30,100 +39,118 @@ const EditCategory = ({ onSave }: EditCategoryProps) => {
       </View>
     );
   }
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteCategory(selectedCategory.id);
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    } finally {
+      setIsDeleting(false);
+      setSelectedCategory(null);
+    }
+  };
+  const renderPreviewItem = renderCategoryPreview();
+  const animateInput = (focus: boolean) => {
+    Animated.spring(inputAnim, {
+        toValue: focus ? 1.05 : 1,
+        friction: 5,
+        tension: 40,
+        useNativeDriver: true,
+    }).start();
+};
 
   return (
     <View style={styles.container}>
       <Formik
-      enableReinitialize
+        enableReinitialize
         initialValues={{
           name: selectedCategory.name,
           color: selectedCategory.color,
-          icon: Object.keys(icons).find(iconKey => icons[iconKey] === selectedCategory.icon) || '',
+          icon: selectedCategory.icon.name,
         }}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          onSave({
-            ...values,
-            icon: icons[values.icon as keyof typeof icons],
-          });
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await onSave(
+              values.name,
+              values.icon,
+              values.color,
+              selectedCategory.animals
+// Map icon key to actual icon
+            );
+            console.log(values)
+          } catch (error) {
+            console.error('Error saving category:', error);
+          } finally {
+            setSubmitting(false); // Ensure the form is re-enabled after save
+          }
         }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue,isSubmitting,isValid }) => (
           <>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.scrollContainer}>
               {/* Title Preview */}
               <View style={styles.titleContainer}>
-                <View style={styles.iconContainer}>
-                  <Image
-                    source={icons[values.icon as keyof typeof icons]}
-                    style={[styles.icon, { tintColor: values.color }]}
-                  />
-                </View>
-                <Text style={[FONTS.h3, { color: values.color }]}>{values.name}</Text>
+              {renderPreviewItem({ name: values.name, icon: values.icon as keyof typeof animalIcons, color: values.color })}
               </View>
 
               {/* Form Fields */}
               <View style={styles.descriptionContainer}>
                 <Text style={FONTS.h2}>Edit Category</Text>
 
-                <Field
-                  name="name"
-                  component={TextInput}
-                  style={styles.input}
-                  placeholder="Category Name"
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                />
-                {touched.name && errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
+                {/* Category Name */}
+                <CategoryNameInput
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        inputAnim={inputAnim}
+                    />
+                {/* Color */}
+                <ColorPicker
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
+                        animateInput={animateInput}
+                    />
+                {/* Icon */}
+                <IconPicker
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
+                        animateInput={animateInput}
+                    />
 
-                <Text style={styles.label}>Select Color:</Text>
-                <ScrollView style={styles.pickerContainer}>
-                  <Field
-                    name="color"
-                    component={Picker}
-                    selectedValue={values.color}
-                    onValueChange={handleChange('color')}
-                    style={styles.picker}
-                  >
-                    {Object.keys(COLORS).map((colorKey) => (
-                      <RNPicker.Item
-                        key={colorKey}
-                        label={colorKey}
-                        value={COLORS[colorKey as keyof typeof COLORS]}
-                        color={COLORS[colorKey as keyof typeof COLORS]}
-                      />
-                    ))}
-                  </Field>
-                </ScrollView>
-                {touched.color && errors.color ? <Text style={styles.errorText}>{errors.color.toString()}</Text> : null}
-
-                <Text style={styles.label}>Select Icon:</Text>
-                <ScrollView style={styles.pickerContainer}>
-                  <Field
-                    name="icon"
-                    component={Picker}
-                    selectedValue={values.icon}
-                    onValueChange={handleChange('icon')}
-                    style={styles.picker}
-                  >
-                    {Object.keys(icons).map((iconKey) => (
-                      <RNPicker.Item key={iconKey} label={iconKey} value={iconKey} />
-                    ))}
-                  </Field>
-                </ScrollView>
-                {touched.icon && errors.icon ? <Text style={styles.errorText}>{errors.icon}</Text> : null}
-              </View>
-            </ScrollView>
-
-            {/* Save Button */}
-            <TouchableOpacity
+                    {/* Save Button */}
+            <Pressable
               style={[styles.saveButton, { backgroundColor: values.color }]}
               onPress={() => handleSubmit()}
-              disabled={!isValid}
+              disabled={!isValid || isSubmitting}
             >
-              <Text style={styles.saveButtonText}>Save {values.name}</Text>
-            </TouchableOpacity>
+              <Text style={styles.saveButtonText}>
+                {isSubmitting ? 'Saving...' : `Save ${values.name}`}
+              </Text>
+            </Pressable>
+            {/* Delete Button */}
+            <Pressable
+              style={[styles.saveButton, { backgroundColor: COLORS.red }]}
+              onPress={() => handleDelete()}
+              disabled={!isValid || isDeleting}
+            >
+              <Text style={styles.saveButtonText}>
+                {isDeleting ? 'Deleting...' : `Delete ${values.name}`}
+              </Text>
+            </Pressable>
+              </View>
+            </View>
+
+            
           </>
         )}
       </Formik>
@@ -131,10 +158,9 @@ const EditCategory = ({ onSave }: EditCategoryProps) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
     padding: SIZES.padding,
   },
   scrollContainer: {
@@ -144,22 +170,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: SIZES.padding,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   iconContainer: {
-    height: 50,
-    width: 50,
+    display: 'flex',
+    flexDirection: 'row',
     borderRadius: 25,
     backgroundColor: COLORS.lightGray,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: SIZES.base,
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
+    marginRight: 10,
   },
   descriptionContainer: {
-    paddingHorizontal: SIZES.padding,
+    paddingHorizontal: 10,
   },
   input: {
     height: 40,
@@ -177,7 +204,6 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   pickerContainer: {
-    maxHeight: 200, // Adjust based on expected content
     marginBottom: 20,
   },
   picker: {
@@ -206,21 +232,5 @@ const styles = StyleSheet.create({
     height: 300,
   },
 });
-
-const Picker = (props: any) => {
-  return (
-    <RNPicker
-      selectedValue={props.field.value}
-      onValueChange={props.field.onChange(props.field.name)}
-      {...props}
-    >
-      {props.children}
-    </RNPicker>
-  );
-};
-
-const TextInput = (props: any) => {
-  return <RNTextInput {...props} />;
-};
 
 export default EditCategory;

@@ -65,8 +65,8 @@ const ProfileScreen = () => {
       ]).start();
     }
   };
-  const renderImage = ({ item }: { item: { id: string; uri: string } }) => (
-    <View style={styles.imageContainer}>
+  const renderImage = ({ item, index }: { item: { id: string; uri: string },index:number }) => (
+    <View style={styles.imageContainer  } key={index}>
       <Image source={{ uri: item.uri }} style={styles.carouselImage} />
     </View>
   );
@@ -109,14 +109,10 @@ const ProfileScreen = () => {
        {/* Carousel of Images */}
        {!isEditing && (
         <View style={styles.carouselContainer}>
-          <FlatList
-            data={images}
-            renderItem={renderImage}
-            keyExtractor={(item) => item.id}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-          />
+          {images.map((image,index) => (
+            renderImage({ item: image,index:index })
+          ))}
+          
         </View>
       )}
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, FlatList, Text, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, FlatList, Text, StyleSheet, Pressable } from 'react-native';
 import { SIZES, COLORS, FONTS } from "@/constants";
 
 import { processCategoryDataToDisplay } from "./processCategoryDataToDisplay";
@@ -17,8 +16,9 @@ interface FarmSummaryProps {
 export function FarmSummary({ selectedCategory, categories, setSelectedCategory }: FarmSummaryProps) {
     const data = processCategoryDataToDisplay(categories);
 
-    const renderItem = ({ item }: { item: any }) => (
-        <TouchableOpacity
+    const renderItem = ({ item,index }: { item: any,index:any }) => (
+        <Pressable
+        key={index}
             style={[
                 styles.itemContainer,
                 { backgroundColor: (selectedCategory && selectedCategory.name === item.name) ? item.color : COLORS.white }
@@ -50,16 +50,15 @@ export function FarmSummary({ selectedCategory, categories, setSelectedCategory 
                     Count: {item.count}  - {item.label}
                 </Text>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     );
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => `${item.id}`}
-            />
+            {data.map((item,index) => (
+                renderItem({ item, index})
+            ))}
+            
         </View>
     );
 }

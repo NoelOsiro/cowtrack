@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet, Animated, Easing } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import Drawer from 'expo-router/drawer';
 import { Link } from 'expo-router';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { getCategoriesData } from '@/store/dataStorage';
+import useCategoryStore from '@/store/useCategoryStore';
+
 
 
 const CustomDrawerContent = () => {
   const [expanded, setExpanded] = React.useState(false);
   const animation = React.useRef(new Animated.Value(0)).current;
+
 
   const toggleDrawer = () => {
     setExpanded(!expanded);
@@ -18,6 +23,7 @@ const CustomDrawerContent = () => {
       useNativeDriver: false,
     }).start();
   };
+
 
   const animatedStyle = {
     height: animation.interpolate({
@@ -33,11 +39,11 @@ const CustomDrawerContent = () => {
       </Pressable>
       <Animated.View style={[styles.dropdownContainer, animatedStyle]}>
         <Link href="/home" asChild>
-        <Pressable
-          style={styles.drawerItem}
-        >
-          <Text style={styles.drawerItemText}>Profile</Text>
-        </Pressable>
+          <Pressable
+            style={styles.drawerItem}
+          >
+            <Text style={styles.drawerItemText}>Profile</Text>
+          </Pressable>
         </Link>
         {/* Add more dropdown items here */}
       </Animated.View>
@@ -84,6 +90,17 @@ const AppDrawer = () => (
   </Drawer>
 );
 
+export default function App() {
+  const {categories,loadCategories} = useCategoryStore();
+  
+  useEffect(() => {
+    loadCategories();
+  },[]);
+  console.log(categories);
+  return (
+      <AppDrawer />
+  );
+}
 const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
@@ -108,12 +125,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
   },
-});
-
-export default function App() {
-  return (
-
-      <AppDrawer />
-
-  );
-}
+})

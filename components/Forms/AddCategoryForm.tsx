@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Animated, Image } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Animated, Image, Pressable } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { SIZES, COLORS, FONTS, icons } from '@/constants';
 import { Picker } from '@react-native-picker/picker';
+import { saveCategory } from '@/utils/saveCategory';
+import useCategoryStore from '@/store/useCategoryStore';
+import { Category } from '@/constants/categoriesData';
+import { animalIcons } from '@/constants/icons';
+import renderCategoryPreview from '../Preview/CategoryPreview';
+import CategoryNameInput from './CategoryNameInput';
+import IconPicker from './IconPicker';
+import ColorPicker from './ColorPicker';
 
 
 const categorySchema = Yup.object().shape({
@@ -15,38 +23,43 @@ const categorySchema = Yup.object().shape({
 
 const AddCategoryForm = () => {
     const [inputAnim] = React.useState(new Animated.Value(1));
+    const { categories, addCategory } = useCategoryStore();
+    const [loading, setLoading] = useState(false);
 
-    const handleSave = (values: { name: string; icon: string; color: string }) => {
-        Toast.show('Category Added successfully', {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.TOP,
-            backgroundColor: COLORS.primary,
-        });
-        console.log('Category Data:', values);
+    const handleSave = async (values: { name: string; icon: string; color: string }) => {
+        setLoading(true);        
+        try {
+            let id = Math.random().toString(36).substring(2, 9);
+            const iconKey = animalIcons[values.icon as keyof typeof animalIcons];
+            const data: Category = { id, name: values.name, breeds: [], icon: iconKey, color: values.color, animals: [] };
+            
+            await addCategory(data);
+            Toast.show('Category Added successfully', {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                backgroundColor: COLORS.primary,
+            });
+        } catch (error) {
+            Toast.show('Error adding category', {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.TOP,
+                backgroundColor: COLORS.red,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
-    const renderPreviewItem = (values: { name: string; icon: string; color: string }) => {
-        const iconSource = icons[values.icon] || icons.baby_car; // Default icon if not selected
-        const color = values.color || COLORS.primary; // Default color
-    
-        return (
-            <TouchableOpacity
-            style={styles.itemContainer}
-        >
-            <Image
-                source={iconSource}
-                style={[styles.icon, { tintColor: color }]}
-            />
-            <Text style={styles.itemText}>{values.name || 'Category Name'}</Text>
-        </TouchableOpacity>
-        );
-      };
+
+    const renderPreviewItem = renderCategoryPreview();
     const animateInput = (focus: boolean) => {
-        Animated.timing(inputAnim, {
+        Animated.spring(inputAnim, {
             toValue: focus ? 1.05 : 1,
-            duration: 200,
+            friction: 5,
+            tension: 40,
             useNativeDriver: true,
         }).start();
     };
+
 
     return (
         <Formik
@@ -56,72 +69,43 @@ const AddCategoryForm = () => {
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                 <View style={styles.formContainer}>
-                    <Text style={styles.label}>Category Name</Text>
-                    <TextInput
-                        style={[styles.input, touched.name && errors.name ? styles.inputError : null]}
-                        placeholder="Enter category name"
-                        onChangeText={handleChange('name')}
-                        onBlur={handleBlur('name')}
-                        value={values.name}
-                        onFocus={() => Animated.spring(inputAnim, { toValue: 1.05, useNativeDriver: true }).start()}
+                    <CategoryNameInput
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        inputAnim={inputAnim}
                     />
-                    {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-                    <Text style={styles.label}>Icon</Text>
-                    <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={values.icon}
-                            onValueChange={(itemValue) => setFieldValue('icon', itemValue)}
-                            onFocus={() => animateInput(true)}
-                            onBlur={() => {
-                                handleBlur('icon');
-                                animateInput(false)
-                            }}
-                            style={[styles.picker, touched.icon && errors.icon ? styles.inputError : null]}
-                        >
-                            <Picker.Item label="Select an icon" value="" />
-                            {Object.keys(icons).map((key) => (
-                                <Picker.Item 
-                                key={key} 
-                                label={key.replace(/_/g, ' ')} 
-                                value={key} />
-                            ))}
-                        </Picker>
-                    </View>
-                    {touched.icon && errors.icon && <Text style={styles.errorText}>{errors.icon}</Text>}
 
-                    <Text style={styles.label}>Color</Text>
-                    <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={values.color}
-                            onValueChange={(itemValue) => setFieldValue('color', itemValue)}
-                            onFocus={() => animateInput(true)}
-                            onBlur={() => {
-                                handleBlur('color');
-                                animateInput(false);
-                            }}
-                            style={[styles.picker, touched.color && errors.color ? styles.inputError : null]}
-                        >
-                            <Picker.Item label="Select a color" value="" />
-                            {Object.keys(COLORS).map((key) => (
-                                <Picker.Item
-                                    key={key}
-                                    label={key.charAt(0).toUpperCase() + key.slice(1)}
-                                    value={COLORS[key]}
-                                />
-                            ))}
-                        </Picker>
-                        {touched.color && errors.color && <Text style={styles.errorText}>{errors.color}</Text>}
-                    </View>
+                    <IconPicker
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
+                        animateInput={animateInput}
+                    />
 
-                    <TouchableOpacity style={styles.saveButton} onPress={() => handleSubmit()}>
-                        <Text style={styles.saveButtonText}>Save Category</Text>
+                    <ColorPicker
+                        values={values}
+                        errors={errors}
+                        touched={touched}
+                        handleBlur={handleBlur}
+                        setFieldValue={setFieldValue}
+                        animateInput={animateInput}
+                    />
+
+                    <TouchableOpacity style={styles.saveButton} onPress={() => handleSubmit()} disabled={loading}>
+                        <Text style={styles.saveButtonText}>{loading ? 'Saving...' : 'Save Category'}</Text>
                     </TouchableOpacity>
+
                     {/* Preview Section */}
-          <View style={styles.previewContainer}>
-            <Text style={styles.previewTitle}>Preview</Text>
-            {renderPreviewItem(values)}
-          </View>
+                    <View style={styles.previewContainer}>
+                        <Text style={styles.previewTitle}>Preview</Text>
+                        {renderPreviewItem({ name: values.name, icon: values.icon as keyof typeof animalIcons, color: values.color })}
+                    </View>
                 </View>
             )}
         </Formik>
@@ -130,10 +114,10 @@ const AddCategoryForm = () => {
 // Helper function to render a color label with a square filled with the color
 const getColorLabel = (colorName: string, colorValue: string) => (
     <View style={styles.colorItem}>
-      <View style={[styles.colorSquare, { backgroundColor: colorValue }]} />
-      <Text style={styles.colorName}>{colorName}</Text>
+        <View style={[styles.colorSquare, { backgroundColor: colorValue }]} />
+        <Text style={styles.colorName}>{colorName}</Text>
     </View>
-  );
+);
 const styles = StyleSheet.create({
     formContainer: {
         backgroundColor: COLORS.white,
@@ -170,18 +154,18 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.radius,
         shadowColor: COLORS.lightGray,
         shadowOffset: {
-          width: 0,
-          height: 3,
+            width: 0,
+            height: 3,
         },
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
-      },
-      previewTitle: {
+    },
+    previewTitle: {
         ...FONTS.h3,
         color: COLORS.primary,
         marginBottom: SIZES.base,
-      },
+    },
     pickerContainer: {
         borderColor: COLORS.lightGray,
         borderWidth: 1,
@@ -198,14 +182,14 @@ const styles = StyleSheet.create({
         height: 20,
         marginRight: 10,
         borderRadius: 5,
-      },
-      colorName: {
+    },
+    colorName: {
         fontSize: 16,
-      },
-      colorItem: {
+    },
+    colorItem: {
         flexDirection: 'row',
         alignItems: 'center',
-      },
+    },
     saveButton: {
         backgroundColor: COLORS.primary,
         paddingVertical: SIZES.base,
@@ -234,16 +218,17 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
         alignItems: 'center',
-      },
-      icon: {
+    },
+    icon: {
         width: 32,
         height: 32,
         marginRight: SIZES.body1,
-      },
-      itemText: {
+    },
+    itemText: {
         color: COLORS.primary,
         ...FONTS.h2,
-      },
+    },
 });
 
 export default AddCategoryForm;
+

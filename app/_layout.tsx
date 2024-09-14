@@ -10,8 +10,85 @@ import { Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 
+
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const mainDrawer = <Drawer
+  screenOptions={() => ({
+    headerShown: false,
+    drawerActiveBackgroundColor: '#9fcbdda2',
+    drawerActiveTintColor: '#000',
+    drawerAllowFontScaling: true,
+    drawerStyle: {
+      backgroundColor: '#f0f0f0',
+      width: 240,
+    },
+    drawerContentContainerStyle: {
+      flex: 1,
+      paddingTop: 20,
+    },
+    headerRight: () => (
+      <Link href="/profile" asChild>
+        <Pressable style={navbarStyles.moreButton}>
+          <Feather name="more-vertical" size={24} color="black" />
+        </Pressable>
+      </Link>
+    ),
+  })}
+>
+  <Drawer.Screen
+    name="home"
+    options={{
+      title: 'Home',
+      drawerLabel: 'Home',
+      drawerIcon: () => <Feather name="home" size={24} color="black" />,
+      headerShown: true,
+      headerTitleAlign: 'center'
+    }} />
+  <Drawer.Screen
+    name="category"
+    options={{
+      title: 'Categories',
+      drawerLabel: 'Categories',
+      drawerIcon: () => <Feather name="list" size={24} color="black" />,
+      headerShown: true,
+      headerTitleAlign: 'center',
+    }} />
+  <Drawer.Screen name="items"
+    options={{
+      title: 'Items',
+      drawerLabel: 'Items',
+      drawerIcon: () => <Feather name="book" size={24} color="black" />,
+      headerShown: true,
+      headerTitleAlign: 'center',
+    }} />
+  <Drawer.Screen
+    name="profile"
+    options={{
+      title: 'Profile',
+      headerShown: true,
+      headerTitleAlign: 'center',
+      drawerLabel: 'Profile',
+      drawerIcon: () => <Feather name="user" size={24} color="black" />,
+      headerLeft: () => (
+        <Link href="/category" asChild>
+          <Pressable style={navbarStyles.backButton}>
+            <Feather name="chevron-left" size={24} color="black" />
+          </Pressable>
+        </Link>
+      ),
+    }} />
+  <Drawer.Screen
+    name="index"
+    options={{
+      title: 'CowTrack',
+      drawerIcon: () => <Feather name="flag" size={24} color="black" />,
+      headerShown: true,
+      headerTitleAlign: 'center',
+    }} />
+</Drawer>;
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -25,7 +102,6 @@ export default function RootLayout() {
 
 
   });
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -36,91 +112,17 @@ export default function RootLayout() {
     return null;
   }
 
-  return (
-<RootSiblingParent>
-<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Drawer
-      screenOptions={() => ({
-        headerShown: false,
-        drawerActiveBackgroundColor: '#9fcbdda2',
-          drawerActiveTintColor: '#000',
-          drawerAllowFontScaling: true,
-        drawerStyle: {
-          backgroundColor: '#f0f0f0',
-          width: 240,
-        },
-        drawerContentContainerStyle: {
-          flex: 1,
-          paddingTop: 20,
-        },
-        headerRight: () => (
-          <Link href="/profile" asChild>
-            <Pressable style={navbarStyles.moreButton}>
-              <Feather name="more-vertical" size={24} color="black" />
-            </Pressable>
-          </Link>
-        ),
-      })}
-      >
-        <Drawer.Screen 
-        name="home" 
-        options={{
-          title: 'Home',
-          drawerLabel: 'Home',
-          drawerIcon: () => <Feather name="home" size={24} color="black" />,
-          headerShown:true,
-          headerTitleAlign:'center'}}/>
-        <Drawer.Screen 
-        name="category" 
-        options={{
-          title: 'Categories',
-          drawerLabel: 'Categories',
-          drawerIcon: () => <Feather name="list" size={24} color="black" />,      
-          headerShown:true,
-          headerTitleAlign:'center',
-          
-          }}/>
-        <Drawer.Screen name="items"
-        options={{
-          title: 'Items',
-          drawerLabel: 'Items',
-          drawerIcon: () => <Feather name="book" size={24} color="black" />,
-          headerShown:true,
-          headerTitleAlign:'center',
-          
-        }} />
-        <Drawer.Screen 
-        name="profile" 
-        options={{
-          title: 'Profile',
-          headerShown:true,
-          headerTitleAlign:'center',
-          drawerLabel: 'Profile',
-          drawerIcon: () => <Feather name="user" size={24} color="black" />,
-          headerLeft: () => (
-            <Link href="/category" asChild>
-              <Pressable style={navbarStyles.backButton}>
-                <Feather name="chevron-left" size={24} color="black" />
-              </Pressable>
-            </Link>
-          ),
-          }}/>
-        <Drawer.Screen 
-        name="index" 
-        options={{
-          title: 'CowTrack',
-          drawerIcon: () => <Feather name="flag" size={24} color="black" />,
-          headerShown:true,
-          headerTitleAlign:'center',
 
-          }}/>
-      </Drawer>
-      
-    </ThemeProvider>
-</RootSiblingParent>
-    
+  return (
+    <RootSiblingParent>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        {mainDrawer}
+      </ThemeProvider>
+    </RootSiblingParent>
+
   );
 }
+
 const navbarStyles = {
   container: {
     flexDirection: 'row',

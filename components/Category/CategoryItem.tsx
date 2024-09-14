@@ -3,6 +3,7 @@ import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Category } from '@/constants/categoriesData';
 import { COLORS, FONTS, SIZES } from '@/constants';
 import useCategoryStore from '@/store/useCategoryStore';
+import { animalIcons } from '@/constants/icons';
 
 interface CategoryItemProps {
     item: Category;
@@ -11,16 +12,18 @@ interface CategoryItemProps {
 
 const CategoryItem: React.FC<CategoryItemProps> = ({ item, onSelect }) => {
     const { setSelectedCategory } = useCategoryStore();
+    const selectedIcon = item.icon; // Get the selected icon object
+        const IconComponent = selectedIcon?.library;
+        const iconName = selectedIcon?.name; // Get the icon name
+        const color = item.color || COLORS.primary; // Default color
     return (
     
     <Pressable
         onPress={() => setSelectedCategory(item)}
         style={styles.itemContainer}
     >
-        <Image
-            source={item.icon}
-            style={[styles.icon, { tintColor: item.color }]}
-        />
+        <IconComponent name={iconName as any} size={30} color={color} style={styles.icon} />
+        
         <Text style={styles.itemText}>{item.name}</Text>
     </Pressable>
 )};
