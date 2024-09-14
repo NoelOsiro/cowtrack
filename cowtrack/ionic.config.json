@@ -1,0 +1,7 @@
+{
+  "name": "cowtrack",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
