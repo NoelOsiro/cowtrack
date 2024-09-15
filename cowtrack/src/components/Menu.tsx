@@ -35,14 +35,14 @@ const appPages: AppPage[] = [
     mdIcon: copy
   },
   {
-    title: 'Favorites',
-    url: '/folder/Favorites',
+    title: 'Breeds',
+    url: '/folder/Breeds',
     iosIcon: heartOutline,
     mdIcon: heartSharp
   },
   {
-    title: 'Archived',
-    url: '/folder/Archived',
+    title: 'Animals',
+    url: '/folder/Animals',
     iosIcon: archiveOutline,
     mdIcon: archiveSharp
   },

@@ -1,15 +1,12 @@
 import React from 'react';
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonIcon, IonText, IonButton } from '@ionic/react';
 import { home, addCircle, pencil, homeOutline, addCircleOutline, pencilOutline } from 'ionicons/icons';
-import { useStore } from '../../store/categoryStore';
 
 type BannerProps = {
   onAddCategory: () => void;
 };
 
 const Banner = ({ onAddCategory}: BannerProps) => {
-  const {categories} = useStore();
-  console.log(categories);
   return (
     <IonCard className='banner-card'>
       <IonCardHeader color={'light'} className='banner-card-header'>

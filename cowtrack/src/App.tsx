@@ -6,6 +6,7 @@ import Page from './pages/Home/Page';
 import CategoryPage from './pages/Category/Page';
 
 
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -35,12 +36,39 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import React from 'react';
+import React, { useEffect } from 'react';
+import BreedPage from './components/BreedPage';
+import AnimalsPage from './components/AnimalPage';
+import { useStore } from './store/categoryStore';
+import { Category } from './constants';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const setCategories = useStore((state) => state.addCategory);
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const result = await Filesystem.readFile({
+          path: 'categories.json',
+          directory: Directory.Documents,
+          encoding: Encoding.UTF8,
+        });
+
+        if (result.data) {
+          const categories: Category[] = JSON.parse(result.data as string);
+          categories.forEach((category) => setCategories(category));
+        }
+      } catch (error) {
+        console.error('Unable to read file', error);
+      }
+    };
+
+    loadCategories();
+  }, [setCategories]);
+
   return (
 
             <IonApp>
@@ -53,6 +81,12 @@ const App: React.FC = () => {
                     </Route>
                     <Route path="/folder/Category" exact={true}>
                       <CategoryPage />
+                    </Route>
+                    <Route path="/folder/Breeds" exact={true}>
+                      <BreedPage />
+                    </Route>
+                    <Route path="/folder/Animals" exact={true}>
+                      <AnimalsPage />
                     </Route>
                     <Route path="/folder/Home" exact={true}>
                       <Page />

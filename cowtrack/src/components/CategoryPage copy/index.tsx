@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './home.css';
 import Banner from './Banner';
-import AddCategory from './AddCategory';
+import AddCategory from './AddBreed';
 import EditCategory from './EditCategory';
 
 

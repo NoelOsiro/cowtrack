@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './home.css';
 import Banner from './Banner';
-import AddCategory from './AddCategory';
-import EditCategory from './EditCategory';
+import AddBreed from './AddBreed';
+import EditBreed from './EditBreed';
 
 
 type Props = {}
@@ -10,7 +10,7 @@ type Props = {}
 const MainPage = (props: Props) => {
   const [selectedAction, setSelectedAction] = useState<boolean>(false);
   // Handlers for add and edit actions
-  const handleAddCategory = () => {
+  const handleAddBreed = () => {
     setSelectedAction(!selectedAction);
   };
 
@@ -18,12 +18,12 @@ const MainPage = (props: Props) => {
 
   return (
     <div id='container'>
-        <Banner onAddCategory={handleAddCategory} />
-         {/* Conditionally render Add Category card */}
+        <Banner onAddBreed={handleAddBreed} />
+         {/* Conditionally render Add Breed card */}
       {selectedAction ? (
-        <AddCategory/>
+        <AddBreed/>
       ):(
-        <EditCategory/>)}
+        <EditBreed/>)}
 
 
     </div>
