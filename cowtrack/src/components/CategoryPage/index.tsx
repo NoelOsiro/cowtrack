@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './home.css';
 import Banner from './Banner';
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
 import AddCategory from './AddCategory';
 import EditCategory from './EditCategory';
 

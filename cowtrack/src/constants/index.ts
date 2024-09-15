@@ -25,3 +25,29 @@ export interface StoreState {
   updateCategory: (updatedCategory: Category) => void;
   deleteCategory: (id: string) => void;
 }
+export interface Breed {
+  id: string;
+  name: string;
+  categoryId: string;
+}
+export interface BreedStoreState {
+  breeds: Breed[];
+  addBreed: (breed: Breed) => void;
+  updateBreed: (updatedBreed: Breed) => void;
+  deleteBreed: (id: string) => void;
+}
+
+export interface Animal {
+  id: string;
+  name: string;
+  categoryId: string;
+  breedId: string;
+  count: number;
+
+}
+export interface AnimalStoreState {
+  animals: Animal[];
+  addAnimal: (animal: Animal) => void;
+  updateAnimal: (updatedAnimal: Animal) => void;
+  deleteAnimal: (id: string) => void;
+}

@@ -55,7 +55,7 @@ const EditCategory = (props: Props) => {
     let id  = editingCategory.id;
     await deleteDataFromFile(id);
     setDisplayForm(false);
-    history.push('/folder/Home')
+    history.push('/folder/Category')
   }
   
   return (
@@ -68,20 +68,24 @@ const EditCategory = (props: Props) => {
         <DisplayCategories onEdit={handleEdit} />
       </IonCardContent>
       {displayForm && (
-        <IonCardContent className='form-content'>
-          <CategoryForm 
-            onSubmit={handleSubmit} 
-            onChange={handleFormChange} 
-            values={{
-            name: editingCategory.name,
-            icon: editingCategory.icon,
-            color: editingCategory.color,
-          }}
-          deleteCategory={handleDelete}  />
-        </IonCardContent>
+        renderFormContent(handleSubmit, handleFormChange, editingCategory, handleDelete)
       )}
     </IonCard>
   )
 }
 
 export default EditCategory
+
+function renderFormContent(handleSubmit: (values: any) => Promise<void>, handleFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, editingCategory: Category, handleDelete: () => Promise<void>): React.ReactNode {
+  return <IonCardContent className='form-content'>
+    <CategoryForm
+      onSubmit={handleSubmit}
+      onChange={handleFormChange}
+      values={{
+        name: editingCategory.name,
+        icon: editingCategory.icon,
+        color: editingCategory.color,
+      }}
+      deleteCategory={handleDelete} />
+  </IonCardContent>
+}

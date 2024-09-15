@@ -11,11 +11,11 @@ const Banner = ({ onAddCategory}: BannerProps) => {
     <IonCard className='banner-card'>
       <IonCardHeader color={'light'} className='banner-card-header'>
         <IonIcon md={home} ios={homeOutline} className='banner-icon' color='primary' size='large' />
-        <IonCardTitle className='banner-title'>Categories</IonCardTitle>
+        <IonCardTitle className='banner-title'>Animals</IonCardTitle>
       </IonCardHeader>
 
       <IonCardContent className='banner-content'>
-        <IonText className='banner-date'>Add or edit categories</IonText>
+        <IonText className='banner-date'>Add or edit animals</IonText>
 
         {/* Button Section */}
         <div className="button-group">

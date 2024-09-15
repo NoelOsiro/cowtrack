@@ -1,6 +1,6 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react'
 import React, { useState } from 'react'
-import CategoryForm from './Form/CategoryForm'
+import CategoryForm from './Form/AnimalForm'
 import DisplayCategories from './DisplayCategories'
 import { Category } from '../../constants'
 import { updateDataToFile } from '../../uitls/updateDataToFile'

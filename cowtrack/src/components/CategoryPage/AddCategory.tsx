@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { v4 as uuidv4 } from 'uuid'; // Install uuid library for generating unique IDs
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import CategoryForm from './Form/CategoryForm';
-import { Category } from '../../constants';
 import { saveDataToFile } from '../../uitls/saveDataToFile';
+import { useStore } from '../../store/categoryStore';
 
 
 const AddCategory: React.FC = () => {
+  const { addCategory } = useStore();
   const [categoryData, setCategoryData] = useState({ name: '', icon: '', color: '' });
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (values: any) => {
     console.log('Form Submitted', values);
     setCategoryData(values);
-    await saveDataToFile(values);
+    addCategory(values)
+    await saveDataToFile(values)
+    .then(() => {
+      setShowToast(true); 
+    })
+    .catch((error) => {
+      console.error('Error saving data', error);
+    });
+  
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -35,6 +43,14 @@ const AddCategory: React.FC = () => {
           values={categoryData}
         />
       </IonCardContent>
+      {showToast && (
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Category Added Successfully"
+          duration={2000}
+        />
+      )}
     </IonCard>
   );
 };

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './home.css';
 import Banner from './Banner';
-import AddCategory from './AddCategory';
-import EditCategory from './EditCategory';
+import AddAnimal from './AddAnimal';
+import EditAnimal from './EditAnimal';
 
 
 type Props = {}
@@ -21,9 +21,9 @@ const MainPage = (props: Props) => {
         <Banner onAddCategory={handleAddCategory} />
          {/* Conditionally render Add Category card */}
       {selectedAction ? (
-        <AddCategory/>
+        <AddAnimal/>
       ):(
-        <EditCategory/>)}
+        <EditAnimal/>)}
 
 
     </div>

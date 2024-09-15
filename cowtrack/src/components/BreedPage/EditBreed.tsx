@@ -1,50 +1,47 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react'
 import React, { useState } from 'react'
 import CategoryForm from './Form/BreedForm'
-import DisplayCategories from './DisplayCategories'
-import { Category } from '../../constants'
-import { updateDataToFile } from '../../uitls/updateDataToFile'
-import { deleteDataFromFile } from '../../uitls/deleteDataToFile'
+import DisplayCategories from './DisplayBreeds'
+import { Breed } from '../../constants'
 import { useHistory } from 'react-router-dom'
+import { updateBreedDataToFile } from '../../uitls/updateBreedToFile'
+import { deleteBreedFromFile } from '../../uitls/deleteBreedToFile'
 
 type Props = {}
 
 const EditBreed = (props: Props) => {
   const history = useHistory();
-  const [editingCategory, setEditingCategory] = useState<Category>(
+  const [editingBreed, setEditingBreed] = useState<Breed>(
     {
       id: '',
       name: '',
-      icon: '',
-      color: '',
-      type: ''
+      categoryId: '',
     }
   );
   const [displayForm, setDisplayForm] = useState<boolean>(false);
 
-  const handleEdit = (category: Category) => {
-    setEditingCategory(category);
+  const handleEdit = (breed: Breed) => {
+    setEditingBreed(breed);
     setDisplayForm(true);
   };
+
   const handleSubmit = async (values: any) => {
     console.log('Form Submitted', values);
-    // construct category data
-    let data : Category = {
-      id: editingCategory?.id || '',
+    // construct breed data
+    let data : Breed = {
+      id: editingBreed?.id || '',
       name: values.name,
-      icon: values.icon,
-      color: values.color,
-      type: editingCategory?.type || ''
+      categoryId: values.categoryId,
     };
-    setEditingCategory(data);
-    await updateDataToFile(data);
+    setEditingBreed(data);
+    await updateBreedDataToFile(data);
     setDisplayForm(false);
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
   
-    setEditingCategory(prevData => ({
+    setEditingBreed(prevData => ({
       ...prevData, // Preserve existing data
       [name]: value // Update only the specific field
     }));
@@ -52,10 +49,10 @@ const EditBreed = (props: Props) => {
   const handleDelete = async () => {
     console.log('Form Submitted');
     // construct category data
-    let id  = editingCategory.id;
-    await deleteDataFromFile(id);
+    let id  = editingBreed.id;
+    await deleteBreedFromFile(id);
     setDisplayForm(false);
-    history.push('/folder/Home')
+    history.push('/folder/Breeds')
   }
   
   return (
@@ -73,11 +70,10 @@ const EditBreed = (props: Props) => {
             onSubmit={handleSubmit} 
             onChange={handleFormChange} 
             values={{
-            name: editingCategory.name,
-            icon: editingCategory.icon,
-            color: editingCategory.color,
+            name: editingBreed.name,
+            categoryId: editingBreed.categoryId,
           }}
-          deleteCategory={handleDelete}  />
+          deleteBreed={handleDelete}  />
         </IonCardContent>
       )}
     </IonCard>

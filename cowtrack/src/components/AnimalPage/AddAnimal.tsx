@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
-import BreedForm from './Form/BreedForm';
-import { Category } from '../../constants';
-import { saveDataToFile } from '../../uitls/saveDataToFile';
-import { useBreedStore } from '../../store/breedStore';
-import { saveBreedToFile } from '../../uitls/saveBreedToFile';
+import { useAnimalStore } from '../../store/animalStore';
+import { Animal } from '../../constants';
+import BreedForm from '../BreedPage/Form/BreedForm';
+import { saveAnimalToFile } from '../../uitls/saveAnimalToFile';
 
 
-const AddBreed: React.FC = () => {
-  const { addBreed } = useBreedStore();
+const AddCategory: React.FC = () => {
+  const { addAnimal } = useAnimalStore();
   const [showToast, setShowToast] = useState(false);
-  const [breedData, setBreedData] = useState({ name: '', categoryId: ''});
+  const [animalData, setAnimalData] = useState<Animal>({ name: '', breedId: '', categoryId: '',count:0,id:'' });
 
   const handleSubmit = async (values: any) => {
     console.log('Form Submitted', values);
-    setBreedData(values);
-    addBreed(values)
-    await saveBreedToFile(values)
+    setAnimalData(values);
+    addAnimal(values)
+    await saveAnimalToFile(values)
     .then(() => {
       setShowToast(true); 
     })
-    .catch((error) => {
+    .catch((error:any) => {
       console.error('Error saving data', error);
     });
   
@@ -28,21 +27,21 @@ const AddBreed: React.FC = () => {
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setBreedData(prevData => ({ ...prevData, [name]: value }));
+    setAnimalData(prevData => ({ ...prevData, [name]: value }));
   };
 
 
   return (
     <IonCard className='form-card'>
       <IonCardHeader className='form-card-header'>
-        <IonCardTitle className='form-card-title'>Add Breed</IonCardTitle>
+        <IonCardTitle className='form-card-title'>Add Category</IonCardTitle>
       </IonCardHeader>
 
       <IonCardContent className='form-content'>
         <BreedForm 
           onSubmit={handleSubmit} 
           onChange={handleFormChange}
-          values={breedData}
+          values={animalData}
         />
       </IonCardContent>
       {showToast && (
@@ -57,4 +56,4 @@ const AddBreed: React.FC = () => {
   );
 };
 
-export default AddBreed;
+export default AddCategory;
