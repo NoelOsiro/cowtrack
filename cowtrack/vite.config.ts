@@ -14,5 +14,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
-  }
+  },
+  css: {
+    postcss: './postcss.config.js', // Make sure this path is correct
+  },
 })

@@ -30,7 +30,7 @@ const appPages: AppPage[] = [
   },
   {
     title: 'Categories',
-    url: '/folder/Categories',
+    url: '/folder/Category',
     iosIcon: copyOutline,
     mdIcon: copy
   },
