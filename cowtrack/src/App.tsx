@@ -22,34 +22,27 @@ import React, { useEffect } from 'react';
 import BreedPage from './components/BreedPage';
 import AnimalsPage from './components/AnimalPage';
 import { useStore } from './store/categoryStore';
-import { Category } from './constants';
+import { Breed, Category } from './constants';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+import { useBreedStore } from './store/breedStore';
+import { useAnimalStore } from './store/animalStore';
 
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const setCategories = useStore((state) => state.addCategory);
+  const setBreeds = useBreedStore((state) => state.addBreed);
+  const setAnimals = useAnimalStore((state) => state.addAnimal);
+
   useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const result = await Filesystem.readFile({
-          path: 'categories.json',
-          directory: Directory.Documents,
-          encoding: Encoding.UTF8,
-        });
-
-        if (result.data) {
-          const categories: Category[] = JSON.parse(result.data as string);
-          categories.forEach((category) => setCategories(category));
-        }
-      } catch (error) {
-        console.error('Unable to read file', error);
-      }
-    };
-
+    const loadCategories = fetchCategoriesFromStorage(setCategories);
+    const loadBreeds = fetchBreedsFromStorage(setBreeds);
+    const loadAnimals = fetchAnimalsFromStorage(setAnimals);
+    loadAnimals();
     loadCategories();
-  }, [setCategories]);
+    loadBreeds();
+  }, [setCategories,setBreeds,setAnimals]);
 
   return (
     <IonApp>
@@ -80,3 +73,59 @@ const App: React.FC = () => {
 };
 
 export default App;
+function fetchCategoriesFromStorage(setCategories: (category: Category) => void) {
+  return async () => {
+    try {
+      const result = await Filesystem.readFile({
+        path: 'categories.json',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      if (result.data) {
+        const categories: Category[] = JSON.parse(result.data as string);
+        categories.forEach((category) => setCategories(category));
+      }
+    } catch (error) {
+      console.error('Unable to read file', error);
+    }
+  };
+}
+
+function fetchBreedsFromStorage(setBreeds: (breed: Breed) => void) {
+  return async () => {
+    try {
+      const result = await Filesystem.readFile({
+        path: 'breeds.json',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      if (result.data) {
+        const breeds: Breed[] = JSON.parse(result.data as string);
+        breeds.forEach((breed) => setBreeds(breed));
+      }
+    } catch (error) {
+      console.error('Unable to read file', error);
+    }
+  }
+}
+
+function fetchAnimalsFromStorage(setAnimals: (animal: any) => void) {
+  return async () => {
+    try {
+      const result = await Filesystem.readFile({
+        path: 'animals.json',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      if (result.data) {
+        const animals: any[] = JSON.parse(result.data as string);
+        animals.forEach((animal) => setAnimals(animal));
+      }
+    } catch (error) {
+      console.error('Unable to read file', error);
+    }
+  }
+}

@@ -18,8 +18,8 @@ const DisplayBreeds = ({ onEdit }: { onEdit: (breed: Breed) => void }) => {
           <IonText>No breeds found</IonText>
         </IonCol>
       ) : (
-        breeds.map((breed) => (
-          <IonCol size="6" key={breed.id}>
+        breeds.map((breed,index) => (
+          <IonCol size="6" key={index}>
             <IonButton
               expand="full"
               onClick={() => onEdit(breed)}

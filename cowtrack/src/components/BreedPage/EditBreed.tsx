@@ -58,7 +58,7 @@ const EditBreed = (props: Props) => {
   return (
     <IonCard className='form-card'>
       <IonCardHeader className='form-card-header'>
-        <IonCardTitle className='form-card-title'>Edit Category</IonCardTitle>
+        <IonCardTitle className='form-card-title'>Edit Breed</IonCardTitle>
       </IonCardHeader>
 
       <IonCardContent className='form-content'>

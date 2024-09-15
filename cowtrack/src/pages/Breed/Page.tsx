@@ -1,6 +1,6 @@
 import { useParams } from 'react-router';
 import './Page.css';
-import MainPage from '../../components/CategoryPage';
+import MainPage from '../../components/BreedPage';
 import Layout from '../../Layout/PageLayout';
 
 const Page: React.FC = () => {

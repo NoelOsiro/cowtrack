@@ -42,7 +42,7 @@ const BreedForm: React.FC<BreedFormProps> = ({ onSubmit, onChange, values, delet
       )}
 
       <IonSelect
-        name="icon"
+        name="categoryId"
         value={formik.values.categoryId}
         onIonChange={formik.handleChange}
         onBlur={formik.handleBlur}

@@ -2,7 +2,7 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Breed } from '../constants';
 export const deleteBreedFromFile = async (id: string) => {
     try {
-      const fileName = 'categories.json';
+      const fileName = 'breeds.json';
       let existingData: Breed[] = [];
   
       // Try to read existing data
