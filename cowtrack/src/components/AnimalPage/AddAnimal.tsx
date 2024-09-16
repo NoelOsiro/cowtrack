@@ -3,14 +3,14 @@ import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '
 import { useAnimalStore } from '../../store/animalStore';
 import { Animal } from '../../constants';
 import BreedForm from '../BreedPage/Form/BreedForm';
-import { saveAnimal } from '../../uitls/saveAnimal';
+import { saveAnimal } from '../../uitls/data/saveAnimal';
 import AnimalForm from './Form/AnimalForm';
 
 
 const AddCategory: React.FC = () => {
   const { addAnimal } = useAnimalStore();
   const [showToast, setShowToast] = useState(false);
-  const [animalData, setAnimalData] = useState<Animal>({ name: '', breedId: '',count:0,id:0,location:'' });
+  const [animalData, setAnimalData] = useState<Animal>({ name: '', breedId: 0,count:0,id:0,location:'' });
 
   const handleSubmit = async (values: any) => {
     console.log('Form Submitted', values);

@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import CategoryForm from './Form/BreedForm'
 import DisplayCategories from './DisplayBreeds'
 import { Breed } from '../../constants'
-import { updateBreed } from '../../uitls/updateBreed'
-import { deleteBreed} from '../../uitls/deleteBreed'
+import { updateBreed } from '../../uitls/data/updateBreed'
+import { deleteBreed} from '../../uitls/data/deleteBreed'
 import { useBreedStore } from '../../store/breedStore'
 
 type Props = {}

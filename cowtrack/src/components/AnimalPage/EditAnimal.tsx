@@ -2,9 +2,9 @@ import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '
 import React, { useState } from 'react'
 import DisplayCategories from './DisplayCategories'
 import { Animal } from '../../constants'
-import { updateAnimal } from '../../uitls/updateAnimal'
+import { updateAnimal } from '../../uitls/data/updateAnimal'
 import { useAnimalStore } from '../../store/animalStore'
-import { deleteAnimal } from '../../uitls/deleteAnimal'
+import { deleteAnimal } from '../../uitls/data/deleteAnimal'
 import AnimalForm from './Form/AnimalForm'
 
 type Props = {}

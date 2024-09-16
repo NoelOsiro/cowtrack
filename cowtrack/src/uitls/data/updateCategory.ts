@@ -1,6 +1,6 @@
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { Category } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Category } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 
 export const updateCategory = async (updatedCategory: Category) => {
   try {

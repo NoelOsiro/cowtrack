@@ -1,4 +1,4 @@
-import { supabase } from './supabase/supabaseClient';
+import { supabase } from '../supabase/supabaseClient';
 
 export const deleteCategory = async (id: number) => {
   try {

@@ -1,44 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { IonItem } from '@ionic/react';
+import { createChartData } from '../../uitls/chart/dataFactory';
+import { createChartOptions } from '../../uitls/chart/optionsFactory';
+import { useHomepageStore } from '../../store/homepageStore';
+
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// Chart data
-const data = {
-  labels: ['Goats', 'Cows', 'Sheep'],
-  datasets: [
-    {
-      label: 'Count',
-      data: [12, 19, 3],
-      backgroundColor: [
-        'rgba(99, 255, 177, 0.9)',
-        'rgba(54, 162, 235, 0.8)',
-        'rgba(255, 207, 86, 0.9)',
-      ],
-      hoverBackgroundColor: [
-        'rgba(99, 255, 177, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 207, 86, 1)',
-      ],
-      borderColor: [
-        'rgba(255, 255, 255, 0.7)',
-      ],
-      hoverBorderColor: [
-        'rgba(255, 255, 255, 1)',
-      ],
-      borderWidth: 3,
-      hoverOffset: 8, // Enlarge segment on hover
-    },
-  ],
-};
+interface DonutChartProps {
+  labels: string[];
+  datasetData: number[];
+}
 
-// DonutChart component
-const DonutChart = () => {
-  const chartRef = useRef<any>(null); // To reference the chart instance
+const DonutChart: React.FC<DonutChartProps> = ({ labels, datasetData }) => {
+  const chartRef = useRef<any>(null);
+  // Get the setSelectedData function from the store
+  const { setSelectedData } = useHomepageStore();
   const [centerText, setCenterText] = useState(
-    'Total: ' + data.datasets[0].data.reduce((a, b) => a + b, 0)
+    'Total: ' + datasetData.reduce((a, b) => a + b, 0)
   );
 
   // Custom plugin to render text in the center of the doughnut
@@ -53,8 +35,8 @@ const DonutChart = () => {
 
       ctx.font = 'bold 24px Arial';
       ctx.fillStyle = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'white' // Dark mode text color
-        : 'black'; // Light mode text color
+        ? 'white'
+        : 'black';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -67,76 +49,50 @@ const DonutChart = () => {
   const handleClick = (event: any, elements: any[]) => {
     if (elements.length > 0) {
       const clickedIndex = elements[0].index;
-      const clickedValue = data.datasets[0].data[clickedIndex];
-      const clickedLabel = data.labels[clickedIndex];
+      const clickedValue = datasetData[clickedIndex];
+      const clickedLabel = labels[clickedIndex];
 
       setCenterText(`${clickedLabel}: ${clickedValue}`);
+      // Update the store with the selected data
+      setSelectedData({ label: clickedLabel, value: clickedValue });
     } else {
-      setCenterText('Total: ' + data.datasets[0].data.reduce((a, b) => a + b, 0));
+      setCenterText('Total: ' + datasetData.reduce((a, b) => a + b, 0));
     }
   };
 
   // Manually update the chart when centerText changes
   useEffect(() => {
     if (chartRef.current) {
-      chartRef.current.update(); // Force chart to re-render
+      chartRef.current.update();
     }
   }, [centerText]);
 
-  // Chart options
-  const options = {
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-        labels: {
-          font: {
-            size: 14,
-            family: 'Arial',
-            weight: 600,
-          },
-          color: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'white'
-            : 'black', // Change color based on theme
-        },
-      },
-      title: {
-        display: true,
-        text: 'Livestock Count',
-        font: {
-          size: 18,
-          weight: 600,
-        },
-        color: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'white'
-          : 'black', // Change title color based on theme
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    onClick: handleClick, // Add onClick handler
-    animation: {
-      animateScale: true,
-      animateRotate: true,
-    },
-  };
+  // Inject dynamic data and options
+  const data = createChartData(labels, datasetData);
+  const options = createChartOptions(handleClick);
 
   return (
     <div
       style={{
         position: 'relative',
-        height: '360px',
-        width: '360px',
+        height: '500px',
+        width: '380px',
         padding: '20px',
         backgroundColor: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
           ? '#2D2D2D'
-          : '#F8F9FA', // Background color depending on theme
+          : '#F8F9FA',
         borderRadius: '20px',
-        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)', // Smooth shadow effect
-        transition: 'background-color 0.3s ease', // Smooth transition on theme change
+        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+        transition: 'background-color 0.3s ease',
       }}
     >
+      <IonItem>
+        <div style={{ textAlign: 'center', width: '100%', marginBottom: '10px' }}>
+          <h3>{centerText}</h3>
+        </div>
+      </IonItem>
       <Doughnut
-        ref={chartRef} // Attach the chart reference here
+        ref={chartRef}
         data={data}
         options={options}
         plugins={[centerTextPlugin]}

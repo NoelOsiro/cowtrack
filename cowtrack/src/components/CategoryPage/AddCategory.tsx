@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import CategoryForm from './Form/CategoryForm';
 import { useCategoryStore } from '../../store/categoryStore';
-import { saveCategory } from '../../uitls/saveCategory';
+import { saveCategory } from '../../uitls/data/saveCategory';
 import { Category } from '../../constants';
 
 

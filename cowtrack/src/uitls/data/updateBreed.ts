@@ -1,6 +1,6 @@
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { Breed } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Breed } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 import { PostgrestError } from '@supabase/supabase-js';
 
 export const updateBreed = async (updatedBreed: Breed) => {

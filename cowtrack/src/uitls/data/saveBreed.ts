@@ -1,5 +1,5 @@
-import { Breed } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Breed } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 
 export const saveBreed = async (breed: Breed): Promise<any | Error> => {
   try {

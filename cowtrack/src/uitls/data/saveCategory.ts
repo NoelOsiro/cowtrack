@@ -1,5 +1,5 @@
-import { Category } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Category } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 
 export const saveCategory = async (category: Category): Promise<any> => {
   try {

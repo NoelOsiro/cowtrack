@@ -1,7 +1,7 @@
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { v4 as uuidv4 } from 'uuid';
-import { Animal } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Animal } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 
 export const saveAnimal = async (newData: Animal) => {
 

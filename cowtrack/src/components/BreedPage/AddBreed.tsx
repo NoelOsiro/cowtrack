@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import BreedForm from './Form/BreedForm';
 import { useBreedStore } from '../../store/breedStore';
-import { saveBreed } from '../../uitls/saveBreed';
+import { saveBreed } from '../../uitls/data/saveBreed';
 
 
 const AddBreed: React.FC = () => {

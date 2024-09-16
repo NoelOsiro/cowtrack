@@ -1,5 +1,5 @@
-import { Animal } from '../constants';
-import { supabase } from './supabase/supabaseClient';
+import { Animal } from '../../constants';
+import { supabase } from '../supabase/supabaseClient';
 import { PostgrestError } from '@supabase/supabase-js';
 
 export const updateAnimal = async (updatedAnimal: Animal) => {
