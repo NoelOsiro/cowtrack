@@ -1,16 +1,17 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react'
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react'
 import React, { useState } from 'react'
 import CategoryForm from './Form/BreedForm'
 import DisplayCategories from './DisplayBreeds'
 import { Breed } from '../../constants'
-import { useHistory } from 'react-router-dom'
-import { updateBreedDataToFile } from '../../uitls/updateBreedToFile'
-import { deleteBreedFromFile } from '../../uitls/deleteBreedToFile'
+import { updateBreed } from '../../uitls/updateBreed'
+import { deleteBreed} from '../../uitls/deleteBreed'
+import { useBreedStore } from '../../store/breedStore'
 
 type Props = {}
 
 const EditBreed = (props: Props) => {
-  const history = useHistory();
+  const { editBreed, removeBreed } = useBreedStore();
+  const [showToast, setShowToast] = useState(false);
   const [editingBreed, setEditingBreed] = useState<Breed>(
     {
       id: '',
@@ -34,8 +35,16 @@ const EditBreed = (props: Props) => {
       categoryId: values.categoryId,
     };
     setEditingBreed(data);
-    await updateBreedDataToFile(data);
-    setDisplayForm(false);
+    try {
+      const updatedBreed = await updateBreed(data);
+      
+      editBreed(data); // Assuming this updates the state or UI
+      setShowToast(true); 
+      setDisplayForm(false); // Show success toast or feedback
+    } catch (error:any) {
+      console.error('Error saving category:', error.message || error);
+      // Handle error (e.g., show a toast notification or alert)
+    }
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -50,9 +59,13 @@ const EditBreed = (props: Props) => {
     console.log('Form Submitted');
     // construct category data
     let id  = editingBreed.id;
-    await deleteBreedFromFile(id);
+    await deleteBreed(id)
+    .catch((error) => {
+      console.error('Error deleting data', error);
+      
+    });
+    removeBreed(id);
     setDisplayForm(false);
-    history.push('/folder/Breeds')
   }
   
   return (
@@ -65,19 +78,32 @@ const EditBreed = (props: Props) => {
         <DisplayCategories onEdit={handleEdit} />
       </IonCardContent>
       {displayForm && (
-        <IonCardContent className='form-content'>
-          <CategoryForm 
-            onSubmit={handleSubmit} 
-            onChange={handleFormChange} 
-            values={{
-            name: editingBreed.name,
-            categoryId: editingBreed.categoryId,
-          }}
-          deleteBreed={handleDelete}  />
-        </IonCardContent>
+        renderBreedForm(handleSubmit, handleFormChange, editingBreed, handleDelete)
       )}
+      {showToast && (
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Category Added Successfully"
+          duration={2000}
+        />
+      )}
+      
     </IonCard>
   )
 }
 
 export default EditBreed
+
+function renderBreedForm(handleSubmit: (values: any) => Promise<void>, handleFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, editingBreed: Breed, handleDelete: () => Promise<void>): React.ReactNode {
+  return <IonCardContent className='form-content'>
+    <CategoryForm
+      onSubmit={handleSubmit}
+      onChange={handleFormChange}
+      values={{
+        name: editingBreed.name,
+        categoryId: editingBreed.categoryId,
+      }}
+      deleteBreed={handleDelete} />
+  </IonCardContent>
+}

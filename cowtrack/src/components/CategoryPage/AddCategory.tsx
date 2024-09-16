@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import CategoryForm from './Form/CategoryForm';
-import { saveDataToFile } from '../../uitls/saveDataToFile';
 import { useStore } from '../../store/categoryStore';
+import { saveCategory } from '../../uitls/saveCategory';
+import { Category } from '../../constants';
 
 
 const AddCategory: React.FC = () => {
@@ -10,19 +11,21 @@ const AddCategory: React.FC = () => {
   const [categoryData, setCategoryData] = useState({ name: '', icon: '', color: '' });
   const [showToast, setShowToast] = useState(false);
 
-  const handleSubmit = async (values: any) => {
-    console.log('Form Submitted', values);
+  const handleSubmit = async (values: Category) => {
+    
     setCategoryData(values);
-    addCategory(values)
-    await saveDataToFile(values)
-    .then(() => {
-      setShowToast(true); 
-    })
-    .catch((error) => {
-      console.error('Error saving data', error);
-    });
   
+    try {
+      const savedCategory = await saveCategory(values);
+      
+      addCategory(savedCategory); // Assuming this updates the state or UI
+      setShowToast(true);  // Show success toast or feedback
+    } catch (error:any) {
+      console.error('Error saving category:', error.message || error);
+      // Handle error (e.g., show a toast notification or alert)
+    }
   };
+  
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;

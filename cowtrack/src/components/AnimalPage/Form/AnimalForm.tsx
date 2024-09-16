@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { categoryIcons, categoryColors } from '../../../constants';
 import { useStore } from '../../../store/categoryStore';
 import { useBreedStore } from '../../../store/breedStore';
+import { useAnimalStore } from '../../../store/animalStore';
 
 
 interface AnimalFormProps {
@@ -21,9 +22,10 @@ const validationSchema = Yup.object({
   count: Yup.number().required('Count is required'),
 });
 
-const BreedForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, deleteAnimal }) => {
-  const { categories } = useStore();
+const AnimalForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, deleteAnimal }) => {
+  const { animals } = useAnimalStore();
   const { breeds } = useBreedStore();
+  const { categories } = useStore();
 
   const formik = useFormik({
     initialValues: values,
@@ -101,4 +103,4 @@ const BreedForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, dele
   );
 };
 
-export default BreedForm;
+export default AnimalForm;

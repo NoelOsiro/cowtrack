@@ -16,14 +16,13 @@ export interface Category {
   id: string;
   name: string;
   icon: string;
-  color: string;
-  type: string; // New field for category type
+  color: string; // New field for category type
 }
 export interface StoreState {
   categories: Category[];
   addCategory: (category: Category) => void;
-  updateCategory: (updatedCategory: Category) => void;
-  deleteCategory: (id: string) => void;
+  editCategory: (updatedCategory: Category) => void;
+  removeCategory: (id: string) => void;
 }
 export interface Breed {
   id: string;
@@ -33,8 +32,8 @@ export interface Breed {
 export interface BreedStoreState {
   breeds: Breed[];
   addBreed: (breed: Breed) => void;
-  updateBreed: (updatedBreed: Breed) => void;
-  deleteBreed: (id: string) => void;
+  editBreed: (updatedBreed: Breed) => void;
+  removeBreed: (id: string) => void;
 }
 
 export interface Animal {
@@ -43,11 +42,12 @@ export interface Animal {
   categoryId: string;
   breedId: string;
   count: number;
+  location:string;
 
 }
 export interface AnimalStoreState {
   animals: Animal[];
   addAnimal: (animal: Animal) => void;
-  updateAnimal: (updatedAnimal: Animal) => void;
-  deleteAnimal: (id: string) => void;
+  editAnimal: (updatedAnimal: Animal) => void;
+  removeAnimal: (id: string) => void;
 }

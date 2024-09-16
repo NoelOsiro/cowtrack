@@ -1,50 +1,63 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react'
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react'
 import React, { useState } from 'react'
 import CategoryForm from './Form/AnimalForm'
 import DisplayCategories from './DisplayCategories'
-import { Category } from '../../constants'
-import { updateDataToFile } from '../../uitls/updateDataToFile'
-import { deleteDataFromFile } from '../../uitls/deleteDataToFile'
+import { Animal } from '../../constants'
 import { useHistory } from 'react-router-dom'
+import { updateAnimal } from '../../uitls/updateAnimal'
+import { useAnimalStore } from '../../store/animalStore'
+import { deleteAnimal } from '../../uitls/deleteAnimal'
+import AnimalForm from './Form/AnimalForm'
 
 type Props = {}
 
-const EditCategory = (props: Props) => {
-  const history = useHistory();
-  const [editingCategory, setEditingCategory] = useState<Category>(
+const EditAnimal = (props: Props) => {
+  const { editAnimal, removeAnimal } = useAnimalStore();
+  const [editingAnimal, setEditingAnimal] = useState<Animal>(
     {
       id: '',
       name: '',
-      icon: '',
-      color: '',
-      type: ''
+      categoryId: '',
+      breedId: '',
+      count: 0,
+      location: '',
     }
   );
   const [displayForm, setDisplayForm] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState(false);
 
-  const handleEdit = (category: Category) => {
-    setEditingCategory(category);
+  const handleEdit = (animal: Animal) => {
+    setEditingAnimal(animal);
     setDisplayForm(true);
   };
   const handleSubmit = async (values: any) => {
     console.log('Form Submitted', values);
     // construct category data
-    let data : Category = {
-      id: editingCategory?.id || '',
+    let data : Animal = {
+      id: editingAnimal?.id || '',
       name: values.name,
-      icon: values.icon,
-      color: values.color,
-      type: editingCategory?.type || ''
+      categoryId: values.categoryId,
+      breedId: values.breedId,
+      count: values.count,
+      location: values.location,
     };
-    setEditingCategory(data);
-    await updateDataToFile(data);
-    setDisplayForm(false);
+    setEditingAnimal(data);
+    try {
+      const updatedAnimal = await updateAnimal(data);
+      
+      editAnimal(data); // Assuming this updates the state or UI
+      setShowToast(true); 
+      setDisplayForm(false); // Show success toast or feedback
+    } catch (error:any) {
+      console.error('Error saving category:', error.message || error);
+      // Handle error (e.g., show a toast notification or alert)
+    }
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
   
-    setEditingCategory(prevData => ({
+    setEditingAnimal(prevData => ({
       ...prevData, // Preserve existing data
       [name]: value // Update only the specific field
     }));
@@ -52,10 +65,13 @@ const EditCategory = (props: Props) => {
   const handleDelete = async () => {
     console.log('Form Submitted');
     // construct category data
-    let id  = editingCategory.id;
-    await deleteDataFromFile(id);
+    let id  = editingAnimal.id;
+    await deleteAnimal(id)
+    .catch((error) => {
+      console.error('Error deleting data', error);
+    });
+    removeAnimal(id);
     setDisplayForm(false);
-    history.push('/folder/Home')
   }
   
   return (
@@ -68,20 +84,33 @@ const EditCategory = (props: Props) => {
         <DisplayCategories onEdit={handleEdit} />
       </IonCardContent>
       {displayForm && (
-        <IonCardContent className='form-content'>
-          <CategoryForm 
-            onSubmit={handleSubmit} 
-            onChange={handleFormChange} 
-            values={{
-            name: editingCategory.name,
-            icon: editingCategory.icon,
-            color: editingCategory.color,
-          }}
-          deleteCategory={handleDelete}  />
-        </IonCardContent>
+        renderAnimalForm(handleSubmit, handleFormChange, editingAnimal, handleDelete)
+      )}
+      {showToast && (
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Category Added Successfully"
+          duration={2000}
+        />
       )}
     </IonCard>
   )
 }
 
-export default EditCategory
+export default EditAnimal
+
+function renderAnimalForm(handleSubmit: (values: any) => Promise<void>, handleFormChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, editingAnimal: Animal, handleDelete: () => Promise<void>): React.ReactNode {
+  return <IonCardContent className='form-content'>
+    <AnimalForm
+      onSubmit={handleSubmit}
+      onChange={handleFormChange}
+      values={{
+        name: editingAnimal.name,
+        categoryId: editingAnimal.categoryId,
+        breedId: editingAnimal.breedId,
+        count: editingAnimal.count,
+      }}
+      deleteAnimal={handleDelete} />
+  </IonCardContent>
+}

@@ -31,18 +31,7 @@ import { useAnimalStore } from './store/animalStore';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const setCategories = useStore((state) => state.addCategory);
-  const setBreeds = useBreedStore((state) => state.addBreed);
-  const setAnimals = useAnimalStore((state) => state.addAnimal);
 
-  useEffect(() => {
-    const loadCategories = fetchCategoriesFromStorage(setCategories);
-    const loadBreeds = fetchBreedsFromStorage(setBreeds);
-    const loadAnimals = fetchAnimalsFromStorage(setAnimals);
-    loadAnimals();
-    loadCategories();
-    loadBreeds();
-  }, [setCategories,setBreeds,setAnimals]);
 
   return (
     <IonApp>

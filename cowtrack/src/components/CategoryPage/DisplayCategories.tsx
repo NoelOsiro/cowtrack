@@ -18,12 +18,13 @@ const DisplayCategories = ({ onEdit }: { onEdit: (category: Category) => void })
         </IonCol>
       ) : 
       (
-        categories.map((category) => (
-          <IonCol size="6" key={category.id}>
+        categories.map((category,index) => (
+          
+          <IonCol size="6" key={index}>
             <IonButton
               expand="full"
               onClick={() => onEdit(category)}
-              style={{ backgroundColor: category.color, color: 'white' }}
+              style={{ backgroundColor: category.color, color: 'white', width: 'fit-content' }}
             >
               {categoryIcons.find(icon => icon.value === category.icon) && (
                 <IonIcon

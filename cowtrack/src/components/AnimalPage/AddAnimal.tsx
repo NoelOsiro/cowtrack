@@ -3,7 +3,7 @@ import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '
 import { useAnimalStore } from '../../store/animalStore';
 import { Animal } from '../../constants';
 import BreedForm from '../BreedPage/Form/BreedForm';
-import { saveAnimalToFile } from '../../uitls/saveAnimalToFile';
+import { saveAnimal } from '../../uitls/saveAnimal';
 
 
 const AddCategory: React.FC = () => {
@@ -15,14 +15,12 @@ const AddCategory: React.FC = () => {
     console.log('Form Submitted', values);
     setAnimalData(values);
     addAnimal(values)
-    await saveAnimalToFile(values)
-    .then(() => {
-      setShowToast(true); 
-    })
-    .catch((error:any) => {
+    await saveAnimal(values)
+    .catch((error) => {
       console.error('Error saving data', error);
+      setShowToast(false);
     });
-  
+    setShowToast(true);
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

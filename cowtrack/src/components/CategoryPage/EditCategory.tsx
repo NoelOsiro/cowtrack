@@ -1,44 +1,53 @@
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react'
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react'
 import React, { useState } from 'react'
 import CategoryForm from './Form/CategoryForm'
 import DisplayCategories from './DisplayCategories'
 import { Category } from '../../constants'
-import { updateDataToFile } from '../../uitls/updateDataToFile'
-import { deleteDataFromFile } from '../../uitls/deleteDataToFile'
+import { updateCategory } from '../../uitls/updateCategory'
+import { deleteCategory } from '../../uitls/deleteCategory'
 import { useHistory } from 'react-router-dom'
+import { useStore } from '../../store/categoryStore'
 
 type Props = {}
 
 const EditCategory = (props: Props) => {
-  const history = useHistory();
+  const { editCategory, removeCategory } = useStore();
   const [editingCategory, setEditingCategory] = useState<Category>(
     {
       id: '',
       name: '',
       icon: '',
       color: '',
-      type: ''
     }
   );
   const [displayForm, setDisplayForm] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState(false);
+
 
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
     setDisplayForm(true);
   };
   const handleSubmit = async (values: any) => {
-    console.log('Form Submitted', values);
     // construct category data
     let data : Category = {
       id: editingCategory?.id || '',
       name: values.name,
       icon: values.icon,
       color: values.color,
-      type: editingCategory?.type || ''
     };
     setEditingCategory(data);
-    await updateDataToFile(data);
-    setDisplayForm(false);
+    try {
+      const updatedCategory = await updateCategory(data);
+      
+      editCategory(data); // Assuming this updates the state or UI
+      setShowToast(true); 
+      setDisplayForm(false); // Show success toast or feedback
+    } catch (error:any) {
+      console.error('Error saving category:', error.message || error);
+      // Handle error (e.g., show a toast notification or alert)
+    }
+    
   };
 
   const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -50,12 +59,15 @@ const EditCategory = (props: Props) => {
     }));
   };
   const handleDelete = async () => {
-    console.log('Form Submitted');
     // construct category data
     let id  = editingCategory.id;
-    await deleteDataFromFile(id);
+    await deleteCategory(id)
+    .catch((error) => {
+      console.error('Error deleting data', error);
+      
+    });
+    removeCategory(id);
     setDisplayForm(false);
-    history.push('/folder/Category')
   }
   
   return (
@@ -69,6 +81,14 @@ const EditCategory = (props: Props) => {
       </IonCardContent>
       {displayForm && (
         renderFormContent(handleSubmit, handleFormChange, editingCategory, handleDelete)
+      )}
+      {showToast && (
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Category Added Successfully"
+          duration={2000}
+        />
       )}
     </IonCard>
   )
@@ -87,5 +107,6 @@ function renderFormContent(handleSubmit: (values: any) => Promise<void>, handleF
         color: editingCategory.color,
       }}
       deleteCategory={handleDelete} />
+      
   </IonCardContent>
 }

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import BreedForm from './Form/BreedForm';
-import { Category } from '../../constants';
-import { saveDataToFile } from '../../uitls/saveDataToFile';
 import { useBreedStore } from '../../store/breedStore';
-import { saveBreedToFile } from '../../uitls/saveBreedToFile';
+import { saveBreed } from '../../uitls/saveBreed';
 
 
 const AddBreed: React.FC = () => {
@@ -16,13 +14,11 @@ const AddBreed: React.FC = () => {
     console.log('Form Submitted', values);
     setBreedData(values);
     addBreed(values)
-    await saveBreedToFile(values)
-    .then(() => {
-      setShowToast(true); 
-    })
+    await saveBreed(values)
     .catch((error) => {
-      console.error('Error saving data', error);
+      setShowToast(false);
     });
+    setShowToast(true);
   
   };
 
