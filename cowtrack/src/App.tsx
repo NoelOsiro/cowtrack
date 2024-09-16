@@ -19,13 +19,11 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 import React, { useEffect } from 'react';
-import BreedPage from './components/BreedPage';
-import AnimalsPage from './components/AnimalPage';
-import { useStore } from './store/categoryStore';
+import BreedPage from './pages/Breed/Page';
+import AnimalsPage from './pages/Animals/Page';
 import { Breed, Category } from './constants';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
-import { useBreedStore } from './store/breedStore';
-import { useAnimalStore } from './store/animalStore';
+
 
 
 setupIonicReact();

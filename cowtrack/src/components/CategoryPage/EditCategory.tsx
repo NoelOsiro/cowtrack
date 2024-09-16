@@ -6,15 +6,15 @@ import { Category } from '../../constants'
 import { updateCategory } from '../../uitls/updateCategory'
 import { deleteCategory } from '../../uitls/deleteCategory'
 import { useHistory } from 'react-router-dom'
-import { useStore } from '../../store/categoryStore'
+import { useCategoryStore } from '../../store/categoryStore'
 
 type Props = {}
 
 const EditCategory = (props: Props) => {
-  const { editCategory, removeCategory } = useStore();
+  const { editCategory, removeCategory } = useCategoryStore();
   const [editingCategory, setEditingCategory] = useState<Category>(
     {
-      id: '',
+      id: 0,
       name: '',
       icon: '',
       color: '',
@@ -31,7 +31,7 @@ const EditCategory = (props: Props) => {
   const handleSubmit = async (values: any) => {
     // construct category data
     let data : Category = {
-      id: editingCategory?.id || '',
+      id: editingCategory?.id || 0,
       name: values.name,
       icon: values.icon,
       color: values.color,
@@ -62,12 +62,15 @@ const EditCategory = (props: Props) => {
     // construct category data
     let id  = editingCategory.id;
     await deleteCategory(id)
+    .then(() => {
+      removeCategory(id);
+    setDisplayForm(false);
+    })
     .catch((error) => {
       console.error('Error deleting data', error);
       
     });
-    removeCategory(id);
-    setDisplayForm(false);
+    
   }
   
   return (

@@ -2,13 +2,13 @@ import React from 'react';
 import { IonInput, IonItem, IonText, IonSelect, IonSelectOption, IonButton, IonCardContent, IonCardTitle, IonIcon } from '@ionic/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useStore } from '../../../store/categoryStore';
+import { useCategoryStore } from '../../../store/categoryStore';
 
 
 interface BreedFormProps {
   onSubmit: (values: any) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  values: { name: string; categoryId:string };
+  values: { name: string; categoryId:number };
   deleteBreed?: (values: any) => void;
 }
 
@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
 });
 
 const BreedForm: React.FC<BreedFormProps> = ({ onSubmit, onChange, values, deleteBreed }) => {
-  const { categories } = useStore();
+  const { categories } = useCategoryStore();
   const formik = useFormik({
     initialValues: values,
     validationSchema,

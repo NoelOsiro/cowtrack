@@ -1,12 +1,12 @@
 import { IonGrid, IonRow, IonCol, IonButton, IonIcon, IonText } from '@ionic/react';
 import { Category, categoryIcons } from '../../constants';
-import { useStore } from '../../store/categoryStore';
+import { useCategoryStore } from '../../store/categoryStore';
 // Import your icons
 
 
 
 const DisplayCategories = ({ onEdit }: { onEdit: (category: Category) => void }) => {
-  const {categories} = useStore()
+  const {categories} = useCategoryStore()
   return (
 
     <IonGrid>

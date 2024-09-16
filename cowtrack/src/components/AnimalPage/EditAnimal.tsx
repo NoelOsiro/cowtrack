@@ -1,9 +1,7 @@
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react'
 import React, { useState } from 'react'
-import CategoryForm from './Form/AnimalForm'
 import DisplayCategories from './DisplayCategories'
 import { Animal } from '../../constants'
-import { useHistory } from 'react-router-dom'
 import { updateAnimal } from '../../uitls/updateAnimal'
 import { useAnimalStore } from '../../store/animalStore'
 import { deleteAnimal } from '../../uitls/deleteAnimal'
@@ -15,10 +13,9 @@ const EditAnimal = (props: Props) => {
   const { editAnimal, removeAnimal } = useAnimalStore();
   const [editingAnimal, setEditingAnimal] = useState<Animal>(
     {
-      id: '',
+      id: 0,
       name: '',
-      categoryId: '',
-      breedId: '',
+      breedId: 0,
       count: 0,
       location: '',
     }
@@ -34,9 +31,8 @@ const EditAnimal = (props: Props) => {
     console.log('Form Submitted', values);
     // construct category data
     let data : Animal = {
-      id: editingAnimal?.id || '',
+      id: editingAnimal?.id || 0,
       name: values.name,
-      categoryId: values.categoryId,
       breedId: values.breedId,
       count: values.count,
       location: values.location,
@@ -77,7 +73,7 @@ const EditAnimal = (props: Props) => {
   return (
     <IonCard className='form-card'>
       <IonCardHeader className='form-card-header'>
-        <IonCardTitle className='form-card-title'>Edit Category</IonCardTitle>
+        <IonCardTitle className='form-card-title'>Edit Animals</IonCardTitle>
       </IonCardHeader>
 
       <IonCardContent className='form-content'>
@@ -107,9 +103,9 @@ function renderAnimalForm(handleSubmit: (values: any) => Promise<void>, handleFo
       onChange={handleFormChange}
       values={{
         name: editingAnimal.name,
-        categoryId: editingAnimal.categoryId,
         breedId: editingAnimal.breedId,
         count: editingAnimal.count,
+        location: editingAnimal.location,
       }}
       deleteAnimal={handleDelete} />
   </IonCardContent>

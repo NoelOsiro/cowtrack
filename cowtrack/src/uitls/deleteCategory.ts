@@ -1,6 +1,6 @@
 import { supabase } from './supabase/supabaseClient';
 
-export const deleteCategory = async (id: string) => {
+export const deleteCategory = async (id: number) => {
   try {
     const { data, error } = await supabase
       .from('categories')

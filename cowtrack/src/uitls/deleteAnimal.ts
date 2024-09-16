@@ -1,6 +1,6 @@
 import { supabase } from "./supabase/supabaseClient";
 
-export const deleteAnimal = async (animalId: string) => {
+export const deleteAnimal = async (animalId: number) => {
     try {
         const { data, error } = await supabase
         .from('animals')

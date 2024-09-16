@@ -23,7 +23,7 @@ const DisplayBreeds = ({ onEdit }: { onEdit: (breed: Breed) => void }) => {
             <IonButton
               expand="full"
               onClick={() => onEdit(breed)}
-              style={{ backgroundColor: '#68e2dc', color: 'white' }}
+              style={{ backgroundColor: '#68e2dc', color: 'white', width: 'fit-content' }}
             >
               <IonText>{breed.name}</IonText>
             </IonButton>

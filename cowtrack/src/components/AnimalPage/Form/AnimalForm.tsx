@@ -1,31 +1,26 @@
 import React from 'react';
-import { IonInput, IonItem, IonText, IonSelect, IonSelectOption, IonButton, IonCardContent, IonCardTitle, IonIcon } from '@ionic/react';
+import { IonInput, IonItem, IonText, IonSelect, IonSelectOption, IonButton } from '@ionic/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { categoryIcons, categoryColors } from '../../../constants';
-import { useStore } from '../../../store/categoryStore';
 import { useBreedStore } from '../../../store/breedStore';
-import { useAnimalStore } from '../../../store/animalStore';
 
 
 interface AnimalFormProps {
   onSubmit: (values: any) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  values: { name: string; breedId: string; categoryId: string; count: number; };
+  values: { name: string; breedId: number; location: string; count: number; };
   deleteAnimal?: (values: any) => void;
 }
 
 const validationSchema = Yup.object({
   name: Yup.string().required('Category name is required'),
-  breedId: Yup.string().required('Breed is required'),
-  categoryId: Yup.string().required('Category is required'),
+  breedId: Yup.number().required('Breed is required'),
+  location: Yup.string().required('Location is required'),
   count: Yup.number().required('Count is required'),
 });
 
 const AnimalForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, deleteAnimal }) => {
-  const { animals } = useAnimalStore();
   const { breeds } = useBreedStore();
-  const { categories } = useStore();
 
   const formik = useFormik({
     initialValues: values,
@@ -37,7 +32,7 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, del
     <form onSubmit={formik.handleSubmit}>
       <IonInput
         labelPlacement="floating"
-        label='Category Name'
+        label='Name'
         name="name"
         className='input-field'
         value={formik.values.name}
@@ -68,27 +63,19 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ onSubmit, onChange, values, del
       {formik.touched.breedId && formik.errors.breedId && (
         <IonItem><IonText color={'danger'} className='error-text'>{formik.errors.breedId}</IonText></IonItem>
       )}
-
-      <IonSelect
-        name="categoryId"
-        value={formik.values.categoryId}
+      <IonInput
+        labelPlacement="floating"
+        label='Location'
+        name="location"
+        className='input-field'
+        value={formik.values.location}
         onIonChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        className='input-field'
-        label='Category'
-        labelPlacement='floating'
         fill='outline'
-      >
-        {categories.map((category) => (
-          <IonSelectOption key={category.id} value={category.id}>
-            {category.name}
-          </IonSelectOption>
-        ))}
-      </IonSelect>
-      {formik.touched.categoryId && formik.errors.categoryId && (
-        <IonItem><IonText color={'danger'} className='error-text'>{formik.errors.categoryId}</IonText></IonItem>
+      />
+      {formik.touched.location && formik.errors.location && (
+        <IonItem><IonText color={'danger'} className='error-text'>{formik.errors.location}</IonText></IonItem>
       )}
-
       <IonButton expand="full" type="submit">
         Submit
       </IonButton>

@@ -11,7 +11,6 @@ export const saveAnimal = async (newData: Animal) => {
                 name: newData.name,
                 breedId: newData.breedId,
                 count: newData.count,
-                categoryId: newData.categoryId,
                 location: newData.location,
             }
         ])

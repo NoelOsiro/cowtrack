@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { IonCard, IonCardContent, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonText } from '@ionic/react';
-import { Animal, categoryIcons } from '../../constants';
-import { useStore } from '../../store/categoryStore';
+
+import { IonGrid, IonRow, IonCol, IonButton, IonText } from '@ionic/react';
+import { Animal  } from '../../constants';
 import { useAnimalStore } from '../../store/animalStore';
 // Import your icons
 
@@ -26,7 +24,7 @@ const DisplayCategories = ({ onEdit }: { onEdit: (animal: Animal) => void }) => 
             <IonButton
               expand="full"
               onClick={() => onEdit(animal)}
-              style={{ backgroundColor: 'blue', color: 'white' }}
+              style={{ backgroundColor: 'blue', color: 'white',width:'fit-content' }}
             >
               
               <IonText>{animal.name}</IonText>

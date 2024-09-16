@@ -14,9 +14,9 @@ const EditBreed = (props: Props) => {
   const [showToast, setShowToast] = useState(false);
   const [editingBreed, setEditingBreed] = useState<Breed>(
     {
-      id: '',
+      id: 0,
       name: '',
-      categoryId: '',
+      categoryId: 0,
     }
   );
   const [displayForm, setDisplayForm] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const EditBreed = (props: Props) => {
     console.log('Form Submitted', values);
     // construct breed data
     let data : Breed = {
-      id: editingBreed?.id || '',
+      id: editingBreed?.id || 0,
       name: values.name,
       categoryId: values.categoryId,
     };
@@ -59,13 +59,16 @@ const EditBreed = (props: Props) => {
     console.log('Form Submitted');
     // construct category data
     let id  = editingBreed.id;
+    console.log(editingBreed)
     await deleteBreed(id)
+    .then(() => {
+      removeBreed(id);
+      setShowToast(true);
+    })
     .catch((error) => {
       console.error('Error deleting data', error);
       
     });
-    removeBreed(id);
-    setDisplayForm(false);
   }
   
   return (

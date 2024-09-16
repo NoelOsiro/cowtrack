@@ -8,11 +8,10 @@ export const updateBreed = async (updatedBreed: Breed) => {
   try {
     const { data, error } = await supabase
       .from('breeds')
-      .insert([
-        {
-          name: updatedBreed.name,
-          categoryId: updatedBreed.categoryId
-        }])
+      .update({
+        name: updatedBreed.name,
+        categoryId: updatedBreed.categoryId
+      })
         .eq('id', updatedBreed.id)
 
         if (error) {

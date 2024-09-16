@@ -8,17 +8,18 @@ import { saveBreed } from '../../uitls/saveBreed';
 const AddBreed: React.FC = () => {
   const { addBreed } = useBreedStore();
   const [showToast, setShowToast] = useState(false);
-  const [breedData, setBreedData] = useState({ name: '', categoryId: ''});
+  const [breedData, setBreedData] = useState({ name: '', categoryId: 0});
 
   const handleSubmit = async (values: any) => {
-    console.log('Form Submitted', values);
     setBreedData(values);
-    addBreed(values)
-    await saveBreed(values)
-    .catch((error) => {
-      setShowToast(false);
-    });
-    setShowToast(true);
+    try {
+      const savedBreed = await  saveBreed(values)
+      addBreed(savedBreed); // Assuming this updates the state or UI
+      setShowToast(true);  // Show success toast or feedback
+    } catch (error:any) {
+      console.error('Error saving category:', error.message || error);
+      // Handle error (e.g., show a toast notification or alert)
+    }
   
   };
 

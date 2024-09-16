@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonToast } from '@ionic/react';
 import CategoryForm from './Form/CategoryForm';
-import { useStore } from '../../store/categoryStore';
+import { useCategoryStore } from '../../store/categoryStore';
 import { saveCategory } from '../../uitls/saveCategory';
 import { Category } from '../../constants';
 
 
 const AddCategory: React.FC = () => {
-  const { addCategory } = useStore();
+  const { addCategory } = useCategoryStore();
   const [categoryData, setCategoryData] = useState({ name: '', icon: '', color: '' });
   const [showToast, setShowToast] = useState(false);
 

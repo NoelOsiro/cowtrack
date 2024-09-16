@@ -18,13 +18,10 @@ const MainPage = (props: Props) => {
 
   return (
     <div id='container'>
-        <Banner onAddCategory={handleAddCategory} />
-         {/* Conditionally render Add Category card */}
-      {selectedAction ? (
-        <AddAnimal/>
-      ):(
-        <EditAnimal/>)}
-
+      <Banner onAddCategory={handleAddCategory} />
+      
+      {/* Conditionally render Add Category card */}
+      {selectedAction ? ( <AddAnimal />) : (<EditAnimal />)}
 
     </div>
   )

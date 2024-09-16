@@ -13,7 +13,7 @@ export const categoryColors = [
 ];
 
 export interface Category {
-  id: string;
+  id: number;
   name: string;
   icon: string;
   color: string; // New field for category type
@@ -22,25 +22,24 @@ export interface StoreState {
   categories: Category[];
   addCategory: (category: Category) => void;
   editCategory: (updatedCategory: Category) => void;
-  removeCategory: (id: string) => void;
+  removeCategory: (id: number) => void;
 }
 export interface Breed {
-  id: string;
+  id: number;
   name: string;
-  categoryId: string;
+  categoryId: number;
 }
 export interface BreedStoreState {
   breeds: Breed[];
   addBreed: (breed: Breed) => void;
   editBreed: (updatedBreed: Breed) => void;
-  removeBreed: (id: string) => void;
+  removeBreed: (id: number) => void;
 }
 
 export interface Animal {
-  id: string;
+  id: number;
   name: string;
-  categoryId: string;
-  breedId: string;
+  breedId: number;
   count: number;
   location:string;
 
@@ -49,5 +48,5 @@ export interface AnimalStoreState {
   animals: Animal[];
   addAnimal: (animal: Animal) => void;
   editAnimal: (updatedAnimal: Animal) => void;
-  removeAnimal: (id: string) => void;
+  removeAnimal: (id: number) => void;
 }
