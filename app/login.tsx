@@ -1,19 +1,18 @@
+// Login.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
-import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from 'firebase/auth';
+import { useAuthStore } from '@/store/authStore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { app } from '../firebaseConfig';
 
-interface AuthScreenProps {
-  email: string;
-  setEmail: (email: string) => void;
-  password: string;
-  setPassword: (password: string) => void;
-  isLogin: boolean;
-  setIsLogin: (isLogin: boolean) => void;
-  handleAuthentication: () => Promise<void>;
-}
+const AuthScreen: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const isLogin = useAuthStore((state) => state.isLogin);
+  const setIsLogin = useAuthStore((state) => state.setIsLogin);
+  const handleAuthentication = useAuthStore((state) => state.handleAuthentication);
 
-const AuthScreen: React.FC<AuthScreenProps> = ({ email, setEmail, password, setPassword, isLogin, setIsLogin, handleAuthentication }) => {
   return (
     <View style={styles.authContainer}>
       <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
@@ -33,7 +32,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ email, setEmail, password, setP
         secureTextEntry
       />
       <View style={styles.buttonContainer}>
-        <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={handleAuthentication} color="#3498db" />
+        <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={() => handleAuthentication(email, password)} color="#3498db" />
       </View>
 
       <View style={styles.bottomContainer}>
@@ -45,78 +44,29 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ email, setEmail, password, setP
   );
 }
 
-interface AuthenticatedScreenProps {
-  user: User;
-  handleAuthentication: () => Promise<void>;
-}
+const AuthenticatedScreen: React.FC = () => {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
-const AuthenticatedScreen: React.FC<AuthenticatedScreenProps> = ({ user, handleAuthentication }) => {
   return (
     <View style={styles.authContainer}>
       <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.emailText}>{user.email}</Text>
-      <Button title="Logout" onPress={handleAuthentication} color="#e74c3c" />
+      <Text style={styles.emailText}>{user?.email}</Text>
+      <Button title="Logout" onPress={logout} color="#e74c3c" />
     </View>
   );
 };
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [user, setUser] = useState<User | null>(null); // Track user authentication state
-  const [isLogin, setIsLogin] = useState<boolean>(true);
-
-  const auth = getAuth(app);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
-
-  const handleAuthentication = async () => {
-    try {
-      if (user) {
-        // If user is already authenticated, log out
-        console.log('User logged out successfully!');
-        await signOut(auth);
-      } else {
-        // Sign in or sign up
-        if (isLogin) {
-          // Sign in
-          await signInWithEmailAndPassword(auth, email, password);
-          console.log('User signed in successfully!');
-        } else {
-          // Sign up
-          await createUserWithEmailAndPassword(auth, email, password);
-          console.log('User created successfully!');
-        }
-      }
-    } catch (error: any) {
-      console.error('Authentication error:', error.message);
-    }
-  };
+  const user = useAuthStore((state) => state.user);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {user ? (
-        <AuthenticatedScreen user={user} handleAuthentication={handleAuthentication} />
-      ) : (
-        <AuthScreen
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          isLogin={isLogin}
-          setIsLogin={setIsLogin}
-          handleAuthentication={handleAuthentication}
-        />
-      )}
+      {user ? <AuthenticatedScreen /> : <AuthScreen />}
     </ScrollView>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   container: {

@@ -2,10 +2,10 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import 'react-native-reanimated';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,25 +25,39 @@ export default function RootLayout() {
     'app_icons': require('../assets/fonts/app_icons.ttf'),
   });
 
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
+
   useEffect(() => {
-    if (loaded) {
+    const checkOnboardingStatus = async () => {
+      try {
+        const hasSeenOnboarding = await AsyncStorage.getItem('hasSeenOnboarding');
+        setShowOnboarding(hasSeenOnboarding === null); // If null, user hasn't seen onboarding
+      } catch (error) {
+        console.error('Error loading onboarding status:', error);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  useEffect(() => {
+    if (loaded && showOnboarding !== null) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, showOnboarding]);
 
-  if (!loaded) {
+  if (!loaded || showOnboarding === null) {
     return null;
   }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName="welcome">
+      <Stack initialRouteName={showOnboarding ? 'onboarding' : 'welcome'}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ headerShown: false }}/>
+        <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
-
       </Stack>
     </ThemeProvider>
   );
