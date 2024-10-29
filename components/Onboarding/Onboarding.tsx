@@ -1,5 +1,5 @@
 import { StyleSheet, SafeAreaView, Dimensions, FlatList } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { slides } from '@/constants/slides';
 import { COLORS } from '@/constants/theme';
 import { StatusBar } from 'expo-status-bar';
@@ -15,12 +15,25 @@ const OnboardingScreen: React.FC<Props> = (props) => {
   const ref = useRef<FlatList<any>>(null);
 
   const updateCurrentSlideIndex = (e: any) => {
-    console.log(e);
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
     
   };
+
+  const throttledUpdateCurrentSlideIndex = useCallback(
+    (() => {
+      let lastExecution = 0;
+      return (e: any) => {
+        const now = Date.now();
+        if (now - lastExecution >= 100) { // Adjust the throttle time as needed
+          lastExecution = now;
+          updateCurrentSlideIndex(e);
+        }
+      };
+    })(),
+    [updateCurrentSlideIndex]
+  );
 
   const goToNextSlide = () => {
     const nextSlideIndex = currentSlideIndex + 1;
@@ -44,7 +57,8 @@ const OnboardingScreen: React.FC<Props> = (props) => {
       <FlatList
         ref={ref}
         data={slides}
-        onMomentumScrollEnd={updateCurrentSlideIndex} // Update index when swiping
+        onScroll={throttledUpdateCurrentSlideIndex} // Use the throttled function
+        scrollEventThrottle={16}
         contentContainerStyle={{ height: height * 0.75,width:width }}
         horizontal
         pagingEnabled
