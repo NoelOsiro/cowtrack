@@ -105,6 +105,7 @@ interface Spacing {
     size_24: number;
     size_28: number;
     size_30: number;
+    size_32: number;
   }
   
   export const FONTSIZE: FontSize = {
@@ -118,6 +119,7 @@ interface Spacing {
     size_24: 24,
     size_28: 28,
     size_30: 30,
+    size_32: 32,
   };
   
   interface BorderRadius {
