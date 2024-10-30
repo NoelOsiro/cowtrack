@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import { app } from '../firebaseConfig';
+import { useRouter } from 'expo-router';
 
 const AuthScreen: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -59,10 +60,17 @@ const AuthenticatedScreen: React.FC = () => {
 
 const Login: React.FC = () => {
   const user = useAuthStore((state) => state.user);
+  const router = useRouter();
+  useEffect(() => {
+    if (user) {
+      router.replace('/(tabs)/');
+    }
+  }, [user, router]);
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {user ? <AuthenticatedScreen /> : <AuthScreen />}
+      <AuthScreen />
     </ScrollView>
   );
 };
