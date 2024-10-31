@@ -30,9 +30,9 @@ const HomeScreen: React.FC = () => {
       {user && (
         <>
           <PieChart />
-          <AnimalCountCard data={animalCategories} />
-          <RecentChangesCard data={recentChanges} />
-          <ActionButtons />
+          {/* <AnimalCountCard data={animalCategories} /> */}
+          {/* <RecentChangesCard data={recentChanges} />
+          <ActionButtons /> */}
         </>
       )}
     </ThemedScrollView>
