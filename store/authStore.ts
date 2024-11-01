@@ -1,4 +1,3 @@
-// store/authStore.ts
 import {create} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -9,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   User,
+  updateProfile,
 } from 'firebase/auth';
 import { app } from '../firebaseConfig';
 import { Platform } from 'react-native';
@@ -20,7 +20,7 @@ interface AuthState {
   setIsLogin: (isLogin: boolean) => void;
   setUser: (user: User | null) => void;
   setToken: (token: string) => void;
-  handleAuthentication: (email: string, password: string) => Promise<void>;
+  handleAuthentication: (email: string, password: string, username?: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -36,14 +36,20 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user: User | null) => set({ user }),
       setToken: (token: string) => set({ token }),
       
-      handleAuthentication: async (email: string, password: string) => {
+      handleAuthentication: async (email: string, password: string, username?: string) => {
         const { isLogin, setUser, setToken } = get();
         try {
           const userCredential = isLogin
             ? await signInWithEmailAndPassword(auth, email, password)
             : await createUserWithEmailAndPassword(auth, email, password);
+
           const user = userCredential.user;
           const token = await user.getIdToken();
+
+          // Set username for new users
+          if (!isLogin && username) {
+            await updateProfile(user, { displayName: username });
+          }
 
           setUser(user);
           setToken(token);

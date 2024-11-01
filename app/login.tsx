@@ -1,23 +1,37 @@
-// Login.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import { useAuthStore } from '@/store/authStore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { getAuth } from 'firebase/auth';
-import { app } from '../firebaseConfig';
 import { useRouter } from 'expo-router';
 
 const AuthScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(''); // New state for username
   const isLogin = useAuthStore((state) => state.isLogin);
   const setIsLogin = useAuthStore((state) => state.setIsLogin);
   const handleAuthentication = useAuthStore((state) => state.handleAuthentication);
+
+  const handleSubmit = () => {
+    if (isLogin) {
+      handleAuthentication(email, password);
+    } else {
+      handleAuthentication(email, password, username);
+    }
+  };
 
   return (
     <View style={styles.authContainer}>
       <Text style={styles.title}>{isLogin ? 'Sign In' : 'Sign Up'}</Text>
 
+      {!isLogin && (
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Username"
+          autoCapitalize="none"
+        />
+      )}
       <TextInput
         style={styles.input}
         value={email}
@@ -33,7 +47,7 @@ const AuthScreen: React.FC = () => {
         secureTextEntry
       />
       <View style={styles.buttonContainer}>
-        <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={() => handleAuthentication(email, password)} color="#3498db" />
+        <Button title={isLogin ? 'Sign In' : 'Sign Up'} onPress={handleSubmit} color="#3498db" />
       </View>
 
       <View style={styles.bottomContainer}>
@@ -43,30 +57,17 @@ const AuthScreen: React.FC = () => {
       </View>
     </View>
   );
-}
-
-const AuthenticatedScreen: React.FC = () => {
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-
-  return (
-    <View style={styles.authContainer}>
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.emailText}>{user?.email}</Text>
-      <Button title="Logout" onPress={logout} color="#e74c3c" />
-    </View>
-  );
 };
 
 const Login: React.FC = () => {
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
+  
   useEffect(() => {
     if (user) {
       router.replace('/(tabs)/');
     }
   }, [user, router]);
-  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -74,7 +75,6 @@ const Login: React.FC = () => {
     </ScrollView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -114,11 +114,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     marginTop: 20,
-  },
-  emailText: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 20,
   },
 });
 
