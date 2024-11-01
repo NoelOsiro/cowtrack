@@ -5,6 +5,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, Animated } from 'react-native';
 import { animalCategories, recentChanges } from '@/constants/mockdata';
 import { ThemedScrollView } from '@/components/ThemedScrollView';
+import { FONTFAMILY } from '@/constants/theme';
 
 interface AnimalRecord {
     id: string;
@@ -31,6 +32,7 @@ const RecordsScreen: React.FC = () => {
     return (
         <ThemedScrollView style={styles.container}>
             <FlatList
+            ListHeaderComponent={<Text style={styles.title}>Category</Text>}
                 data={animalRecords}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
@@ -51,6 +53,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         backgroundColor: '#f5f5f5',
     },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: FONTFAMILY.poppins_bold,
+        marginBottom: 10,
+      },
     listContainer: {
         paddingBottom: 16,
     },

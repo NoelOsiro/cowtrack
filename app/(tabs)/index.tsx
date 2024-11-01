@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'expo-router';
 import { animalCategories, recentChanges } from '@/constants/mockdata';
 import PieChart from '@/components/PieChart';
+import Tabs from '@/components/TabView';
 
 const HomeScreen: React.FC = () => {
   const user = useAuthStore((state) => state.user);
@@ -23,18 +24,15 @@ const HomeScreen: React.FC = () => {
   }, [user, router]);
 
   return (
-    <ThemedScrollView contentContainerStyle={styles.container}>
+    <ThemedScrollView contentContainerStyle={styles.container} showsHorizontalScrollIndicator={false}>
       <HeaderWithProfileIcon />
       <ThemedText style={styles.headerText}>Farm Overview</ThemedText>
       <SearchInput />
-      {user && (
-        <>
-          <PieChart />
-          {/* <AnimalCountCard data={animalCategories} /> */}
-          {/* <RecentChangesCard data={recentChanges} />
-          <ActionButtons /> */}
-        </>
-      )}
+      {user && <View>
+      <Tabs/>
+      </View>}
+      
+      
     </ThemedScrollView>
   );
 };
@@ -42,6 +40,7 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 8,
+    flex:1
   },
   headerText: {
     textAlign: 'center',

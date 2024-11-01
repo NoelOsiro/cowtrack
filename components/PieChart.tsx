@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Button, Modal, TextInput, TouchableOpacity, Text } from "react-native";
 import { VictoryLabel, VictoryPie, VictoryTheme } from "victory-native";
 import { ThemedText } from "./ThemedText";
-import { FONTFAMILY } from "@/constants/theme";
+import { createShimmerPlaceHolder } from 'expo-shimmer-placeholder'// Use a shimmer library
+import { Animal } from "@/constants/types";
+import { useAnimalStore } from "@/store/useAnimalstore";
+import { LinearGradient } from 'expo-linear-gradient'
+import { useAuthStore } from "@/store/authStore";
+
 
 type DatumType = {
   x: string;
@@ -10,80 +15,93 @@ type DatumType = {
   label: string;
 };
 
-const initialData: DatumType[] = [
-  { x: "One", y: 2, label: "Cows" },
-  { x: "Two", y: 3, label: "Goats" },
-  { x: "Three", y: 5, label: "Sheep" },
-  { x: "Four", y: 4, label: "Poultry" },
-  { x: "Five", y: 6, label: "Camels" },
-  { x: "Six", y: 3, label: "Pigs" },
-  { x: "Seven", y: 8, label: "Bulls" }
-];
-
-const PIE_CHART_SIZE = 600;
+const PIE_CHART_SIZE = 630;
 const SELECTED_RADIUS_OFFSET = 20;
+const ShimmerPlaceHolder = createShimmerPlaceHolder(LinearGradient)
 
-const getTotalY = (data: DatumType[]) => {
-  return data.reduce((total, item) => total + item.y, 0);
+// Function to transform animal store data into chart data format
+const generateChartData = (animals: Animal[]): DatumType[] => {
+
+  return animals.map((animal) => ({
+    x: animal.species,
+    y: animal.count,
+    label: animal.species,
+  }));
 };
 
 export default function App() {
-  const [data, setData] = useState<DatumType[]>(initialData);
+  const { animals, fetchAnimals } = useAnimalStore();
+  const [chartData, setChartData] = useState<DatumType[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedSlice, setSelectedSlice] = useState<DatumType | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [newEntry, setNewEntry] = useState({ x: "", y: "", label: "" });
+  const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    const loadAnimals = async () => {
+      setLoading(true);
+      if (user?.uid) {
+        await fetchAnimals(user.uid); // Replace with actual user ID
+      }
+      setLoading(false);
+    };
+    loadAnimals();
+  }, [fetchAnimals]);
+
+  useEffect(() => {
+    setChartData(generateChartData(animals));
+  }, [animals]);
 
   const handleSliceClick = (datum: DatumType) => {
     setSelectedSlice(datum);
   };
 
-  const handleAddData = () => {
-    if (newEntry.x && newEntry.y && newEntry.label) {
-      setData([...data, { ...newEntry, y: parseInt(newEntry.y) }]);
-      setModalVisible(false);
-      setNewEntry({ x: "", y: "", label: "" });
-    }
-  };
-
-  const renderLabelComponent = () => (
-    <VictoryLabel angle={0} style={[styles.labelStyle, { fill: "#252525" }]} />
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.pieContainer}>
-        <VictoryPie
-          data={data}
-          theme={VictoryTheme.material}
-          height={PIE_CHART_SIZE}
-          width={PIE_CHART_SIZE}
-          innerRadius={({ datum }) => (selectedSlice?.x === datum.x ? 180 : 200)}
-          radius={({ datum }) => (selectedSlice?.x === datum.x ? 300 : 280)}
-          labels={({ datum }) => datum.label}
-          labelComponent={renderLabelComponent()}
-          labelRadius={({ innerRadius }) =>
-            typeof innerRadius === "number" ? innerRadius + SELECTED_RADIUS_OFFSET : 230
-          }
-          animate={{ duration: 300 }}
-          colorScale={["tomato", "orange", "gold"]}
-          events={[
-            {
-              target: "data",
-              eventHandlers: {
-                onPress: (evt, { datum }: { datum: DatumType }) => {
-                  handleSliceClick(datum);
-                  return [{ target: "data", mutation: () => null }];
-                }
-              }
+        {loading ? (
+          <ShimmerPlaceHolder
+            style={{
+              height: PIE_CHART_SIZE,
+              width: PIE_CHART_SIZE,
+              borderRadius: PIE_CHART_SIZE / 2,
+              backgroundColor: 'transparent',
+              flex: 1,
+            }}
+          />
+        ) : (
+          <VictoryPie
+            data={chartData}
+            theme={VictoryTheme.material}
+            height={PIE_CHART_SIZE}
+            width={PIE_CHART_SIZE}
+            innerRadius={({ datum }) => (selectedSlice?.x === datum.x ? 180 : 200)}
+            radius={({ datum }) => (selectedSlice?.x === datum.x ? 300 : 280)}
+            labels={({ datum }) => datum.label}
+            labelComponent={<VictoryLabel angle={0} style={styles.labelStyle} />}
+            labelRadius={({ innerRadius }) =>
+              typeof innerRadius === "number" ? innerRadius + SELECTED_RADIUS_OFFSET : 230
             }
-          ]}
-        />
+            animate={{ duration: 300 }}
+            colorScale={["tomato", "orange", "gold"]}
+            events={[
+              {
+                target: "data",
+                eventHandlers: {
+                  onPress: (evt, { datum }) => {
+                    handleSliceClick(datum);
+                    return [{ target: "data", mutation: () => null }];
+                  },
+                },
+              },
+            ]}
+          />
+        )}
         <ThemedText style={styles.centerText}>
-          {selectedSlice ? `${selectedSlice.label}: ${selectedSlice.y}` : 'Total: ' + getTotalY(data)}
+          {selectedSlice ? `${selectedSlice.label}: ${selectedSlice.y}` : `Total Animals: ${animals.length}`}
         </ThemedText>
       </View>
-
-      <Button title="Add Data" onPress={() => setModalVisible(true)} />
 
       {/* Modal for adding new data */}
       <Modal transparent={true} visible={modalVisible} animationType="slide">
@@ -109,7 +127,7 @@ export default function App() {
               value={newEntry.y}
               onChangeText={(text) => setNewEntry({ ...newEntry, y: text })}
             />
-            <TouchableOpacity style={styles.addButton} onPress={handleAddData}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.addButtonText}>Add</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
@@ -123,67 +141,16 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 50
-  },
-  pieContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative"
-  },
-  labelStyle: {
-    fontSize: 16,
-    fontFamily: FONTFAMILY.poppins_bold
-  },
-  centerText: {
-    position: "absolute",
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: "bold"
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)"
-  },
-  modalContainer: {
-    width: 300,
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 5
-  },
-  addButton: {
-    backgroundColor: "blue",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    alignItems: "center"
-  },
-  addButtonText: {
-    color: "white",
-    fontWeight: "bold"
-  },
-  cancelButton: {
-    marginTop: 10,
-    alignItems: "center"
-  },
-  cancelButtonText: {
-    color: "red"
-  }
+  container: { justifyContent: "center", alignItems: "center", marginVertical: 25 },
+  pieContainer: { alignItems: "center", justifyContent: "center", position: "relative" },
+  labelStyle: { fontSize: 16 },
+  centerText: { position: "absolute", textAlign: "center", fontSize: 24, fontWeight: "bold" },
+  modalBackground: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0, 0, 0, 0.5)" },
+  modalContainer: { width: 300, padding: 20, backgroundColor: "white", borderRadius: 10 },
+  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  input: { borderWidth: 1, borderColor: "#ccc", padding: 10, marginVertical: 5, borderRadius: 5 },
+  addButton: { backgroundColor: "blue", padding: 10, borderRadius: 5, marginTop: 10, alignItems: "center" },
+  addButtonText: { color: "white", fontWeight: "bold" },
+  cancelButton: { marginTop: 10, alignItems: "center" },
+  cancelButtonText: { color: "red" },
 });
