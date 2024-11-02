@@ -5,6 +5,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useAuthStore } from '@/store/authStore';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -58,16 +59,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="animals"
         options={{
-          title: 'Explore',
+          title: 'Animals',
           tabBarIcon: ({ color, focused }) => (
             <View style={{
               backgroundColor: 'transparent',
               borderRadius: 25,
               padding: 8,
             }}>
-              <TabBarIcon name={focused ? 'compass' : 'compass-outline'} color={Colors[colorScheme ?? 'light'].tabIconSelected} />
+              <FontAwesome6 name={focused ? 'cow' : 'cow'} size={28} color={Colors[colorScheme ?? 'light'].tabIconSelected} />
             </View>
           ),
         }}

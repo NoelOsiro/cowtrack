@@ -2,30 +2,38 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Animal } from '@/constants/types';
-import { getAnimalsByUserId, animalsCollection } from '@/services/animalCollections'; // Adjust the import path as necessary
-import { addDoc,doc, updateDoc } from 'firebase/firestore';
+import { getAnimalsByUserId, animalsCollection } from '@/services/animalCollections';
+import { addDoc, doc, updateDoc } from 'firebase/firestore';
 import { Platform } from 'react-native';
 
 interface AnimalStore {
   animals: Animal[];
+  hasFetched: boolean;
   fetchAnimals: (userId: string) => Promise<void>;
   addAnimal: (animal: Animal) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
+  archiveAnimal: (animalId: string) => Promise<void>;
   clearAnimals: () => void;
 }
 
 export const useAnimalStore = create<AnimalStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       animals: [],
+      hasFetched: false,
 
       // Fetches animals for the specified user from Firestore
       fetchAnimals: async (userId) => {
-        try {
-          const fetchedAnimals = await getAnimalsByUserId(userId);
-          set({ animals: fetchedAnimals as Animal[] });
-        } catch (error) {
-          console.error('Error fetching animals:', error);
+        const { animals, hasFetched } = get();
+        
+        // Fetch only if not already fetched
+        if (animals.length === 0 && !hasFetched) {
+          try {
+            const fetchedAnimals = await getAnimalsByUserId(userId);
+            set({ animals: fetchedAnimals as Animal[], hasFetched: true });
+          } catch (error) {
+            console.error('Error fetching animals:', error);
+          }
         }
       },
 
@@ -33,29 +41,36 @@ export const useAnimalStore = create<AnimalStore>()(
       addAnimal: async (animal) => {
         try {
           const docRef = await addDoc(animalsCollection, animal);
-          set((state) => ({ animals: [...state.animals, { ...animal, id: docRef.id }] }));
+          set((state) => ({
+            animals: [...state.animals, { ...animal, id: docRef.id }],
+          }));
         } catch (error) {
           console.error('Error adding animal:', error);
         }
       },
-      // New archiveAnimal function
-      archiveAnimal: async (animalId:string) => {
+
+      // Archives an animal in Firestore and removes it from the Zustand store
+      archiveAnimal: async (animalId) => {
         try {
           const animalRef = doc(animalsCollection, animalId);
-          await updateDoc(animalRef, { archived: true }); // Update the Firestore document to mark it as archived
-          set((state) => ({ animals: state.animals.filter((animal) => animal.id !== animalId) }));
+          await updateDoc(animalRef, { archived: true });
+          set((state) => ({
+            animals: state.animals.filter((animal) => animal.id !== animalId),
+          }));
         } catch (error) {
-          console.error("Error archiving animal:", error);
+          console.error('Error archiving animal:', error);
         }
       },
 
-      // Updates an existing animal in Firestore and updates the Zustand store
+      // Updates an existing animal in Firestore and the Zustand store
       updateAnimal: async (animal) => {
         try {
           const animalRef = doc(animalsCollection, animal.id);
-          await updateDoc(animalRef, animal as { [x: string]: any }); // Update the Firestore document with the new animal data
+          await updateDoc(animalRef, animal as { [x: string]: any });
           set((state) => ({
-            animals: state.animals.map((a) => (a.id === animal.id ? animal : a)),
+            animals: state.animals.map((a) =>
+              a.id === animal.id ? animal : a
+            ),
           }));
         } catch (error) {
           console.error('Error updating animal:', error);
@@ -63,14 +78,14 @@ export const useAnimalStore = create<AnimalStore>()(
       },
 
       // Clears animals from the Zustand store (useful for logouts or resets)
-      clearAnimals: () => set({ animals: [] }),
+      clearAnimals: () => set({ animals: [], hasFetched: false }),
     }),
 
     // Persistence configuration for Zustand, using AsyncStorage or localStorage based on platform
     {
       name: 'animal-storage',
       storage: createJSONStorage(() =>
-        Platform.OS === "web" ? localStorage : AsyncStorage
+        Platform.OS === 'web' ? localStorage : AsyncStorage
       ),
     }
   )
