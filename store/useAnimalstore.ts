@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Animal } from '@/constants/types';
 import { getAnimalsByUserId, animalsCollection } from '@/services/animalCollections';
-import { addDoc, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { Platform } from 'react-native';
 
 interface AnimalStore {
@@ -13,6 +13,7 @@ interface AnimalStore {
   addAnimal: (animal: Animal) => Promise<void>;
   updateAnimal: (animal: Animal) => Promise<void>;
   archiveAnimal: (animalId: string) => Promise<void>;
+  deleteAnimal: (animalId: string) => Promise<void>;
   clearAnimals: () => void;
 }
 
@@ -74,6 +75,19 @@ export const useAnimalStore = create<AnimalStore>()(
           }));
         } catch (error) {
           console.error('Error updating animal:', error);
+        }
+      },
+
+      // Deletes an animal from Firestore and the Zustand store
+      deleteAnimal: async (animalId) => {
+        try {
+          const animalRef = doc(animalsCollection, animalId);
+          await deleteDoc(animalRef);
+          set((state) => ({
+            animals: state.animals.filter((animal) => animal.id !== animalId),
+          }));
+        } catch (error) {
+          console.error('Error deleting animal:', error);
         }
       },
 
