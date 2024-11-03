@@ -1,25 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, View, FlatList, Dimensions, TouchableOpacity, Pressable } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { SPACING, COLORS, BORDERRADIUS, FONTSIZE } from '@/constants/theme';
 import { Animal } from '@/constants/types';
 import { useAuthStore } from '@/store/authStore';
-import { createShimmerPlaceHolder } from 'expo-shimmer-placeholder'
+import { createShimmerPlaceHolder } from 'expo-shimmer-placeholder';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAnimalStore } from '@/store/useAnimalstore';
+import { Link } from 'expo-router';
 
 const ShimmerPlaceHolder = createShimmerPlaceHolder(LinearGradient);
 const width = Dimensions.get('window').width;
+const numColumns = 2;
+const gap = 5;
+const availableSpace = width - (numColumns - 1) * gap;
+const itemSize = availableSpace / numColumns;
 
 const Dashboard = () => {
   const { animals, fetchAnimals } = useAnimalStore();
   const user = useAuthStore((state) => state.user);
   const [isFetched, setIsFetched] = useState(false);
+  const [selectedSpecies, setSelectedSpecies] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
-      fetchAnimals(user.uid).then(() => setIsFetched(true)); // Mark as fetched when animals are loaded
+      fetchAnimals(user.uid).then(() => setIsFetched(true));
     }
   }, [user]);
 
@@ -29,25 +35,31 @@ const Dashboard = () => {
   const femaleAnimals = animals.filter((animal) => animal.gender === 'Female').length;
   const uniqueSpecies = [...new Set(animals.map((animal) => animal.species))];
 
+  // Filtered animals based on selected species
+  const filteredAnimals = selectedSpecies
+    ? animals.filter((animal) => animal.species === selectedSpecies)
+    : animals;
+
   // Render function for each animal card
   const renderAnimalCard = ({ item }: { item: Animal }) => (
-    <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{borderRadius: BORDERRADIUS.radius_10, marginRight: 10}}  width={190} height={180} >
-      <ThemedView style={styles.card}>
+    <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{ borderRadius: BORDERRADIUS.radius_10, marginRight: 10 }} width={itemSize} height={itemSize}>
+      <Link href={`/animals/${item.id}`}asChild>
+      <Pressable style={styles.card}>
         <ThemedText style={styles.cardTitle}>{item.name}</ThemedText>
         <ThemedText style={styles.cardDetails}>Breed: {item.breed}</ThemedText>
         <ThemedText style={styles.cardDetails}>Age: {item.age} years</ThemedText>
         <ThemedText style={styles.cardDetails}>Purpose: {item.purpose}</ThemedText>
-      </ThemedView>
+      </Pressable>
+      </Link>
     </ShimmerPlaceHolder>
   );
 
   return (
     <ThemedView style={styles.container}>
-      
+
       {/* Summary Section */}
-      <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{borderRadius: BORDERRADIUS.radius_10}}  width={380} height={300}   LinearGradient={LinearGradient}>
-      <ThemedView style={styles.summaryContainer}>
-        
+      <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{ borderRadius: BORDERRADIUS.radius_10 }} width={380} height={150}>
+        <ThemedView style={styles.summaryContainer}>
           <ThemedView style={styles.summaryCard}>
             <ThemedText style={styles.summaryTitle}>Total Animals</ThemedText>
             <ThemedText style={styles.summaryNumber}>{totalAnimals}</ThemedText>
@@ -60,8 +72,7 @@ const Dashboard = () => {
             <ThemedText style={styles.summaryTitle}>Female</ThemedText>
             <ThemedText style={styles.summaryNumber}>{femaleAnimals}</ThemedText>
           </ThemedView>
-        
-      </ThemedView>
+        </ThemedView>
       </ShimmerPlaceHolder>
 
       {/* Species Section */}
@@ -70,9 +81,11 @@ const Dashboard = () => {
         <FlatList
           data={uniqueSpecies}
           renderItem={({ item }) => (
-            <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{borderRadius: BORDERRADIUS.radius_10, marginRight:10}}  width={90} height={45}>
-              <ThemedText style={styles.species}>{item}</ThemedText>
-            </ShimmerPlaceHolder>
+            <TouchableOpacity onPress={() => setSelectedSpecies(selectedSpecies === item ? null : item)}>
+              <ShimmerPlaceHolder visible={isFetched} shimmerStyle={{ borderRadius: BORDERRADIUS.radius_10, marginRight: 10 }} width={90} height={45}>
+                <ThemedText style={[styles.species, selectedSpecies === item && styles.selectedSpecies]}>{item}</ThemedText>
+              </ShimmerPlaceHolder>
+            </TouchableOpacity>
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -83,13 +96,14 @@ const Dashboard = () => {
 
       {/* Animal List Section */}
       <ThemedView style={styles.section}>
-        <ThemedText style={styles.sectionTitle}>Animals</ThemedText>
+        <ThemedText style={styles.sectionTitle}>Animals {selectedSpecies ? `(${selectedSpecies})` : "(All)"}</ThemedText>
         <FlatList
-          data={animals}
+          data={filteredAnimals}
           renderItem={renderAnimalCard}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.animalList}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{gap}}
+          columnWrapperStyle={{gap}}
           keyExtractor={(item) => item.id}
         />
       </ThemedView>
@@ -105,10 +119,9 @@ const styles = StyleSheet.create({
     padding: SPACING.space_16,
   },
   summaryContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginBottom: SPACING.space_20,
-    gap: SPACING.space_20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: SPACING.space_24,
   },
   summaryCard: {
     backgroundColor: COLORS.primaryBlueHex,
@@ -117,11 +130,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.space_20,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '30%',
   },
   summaryTitle: {
     fontSize: FONTSIZE.size_16,
     color: COLORS.primaryWhiteHex,
     fontWeight: 'bold',
+    textAlign:'center'
   },
   summaryNumber: {
     fontSize: FONTSIZE.size_24,
@@ -147,15 +162,20 @@ const styles = StyleSheet.create({
     fontSize: FONTSIZE.size_14,
     marginRight: SPACING.space_8,
   },
+  selectedSpecies: {
+    backgroundColor: COLORS.primaryBlueHex,
+    color: COLORS.primaryWhiteHex,
+  },
   animalList: {
-    paddingLeft: SPACING.space_10,
+    gap:10,
   },
   card: {
     backgroundColor: COLORS.secondaryGreyHex,
     borderRadius: BORDERRADIUS.radius_10,
     padding: SPACING.space_16,
-    width: 200,
-    marginRight: SPACING.space_12,
+    width: (width - SPACING.space_16 * 3) / 2,
+    marginBottom: SPACING.space_12,
+    
   },
   cardTitle: {
     fontSize: FONTSIZE.size_18,

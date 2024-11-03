@@ -42,7 +42,7 @@ export default function RootLayout() {
         })}
         initialRouteName="index"
       >
-        <Stack.Screen name="[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="[id]" options={{headerTitleAlign: 'center'}} />
         <Stack.Screen name="index" options={{headerTitleAlign: 'center', headerTitle:'Animals'}} />
       </Stack>
     </ThemeProvider>

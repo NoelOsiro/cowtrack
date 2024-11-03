@@ -8,6 +8,9 @@ export const animalsCollection = collection(db, 'animals');
 export async function getAnimalsByUserId(userId: string) {
     const q = query(animalsCollection, where("userId", "==", userId));
     const animalSnapshot = await getDocs(q);
-    const animalList = animalSnapshot.docs.map(doc => doc.data());
+    const animalList = animalSnapshot.docs.map(doc => ({
+        id: doc.id,         // Include document ID
+        ...doc.data()       // Spread other document fields
+    }));
     return animalList;
 }
