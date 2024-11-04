@@ -4,7 +4,7 @@ export interface Animal {
     breed: string;
     dob: string;
     rfid_tag: string;
-    initialWeight: number;
+    initialWeight: string;
     initialHealthStatus: string;
     gender: string;
     origin: string;
@@ -12,8 +12,10 @@ export interface Animal {
     purpose: string;
     owner: string;
     species: string;
-    age: number;
-    count: number;
+    age: string;
+    count: string;
     userId: string; // ID of the user who owns this animal
   }
+  export type EditableFields = Partial<Pick<Animal, 'origin' | 'purchaseDate' | 'purpose' | 'name' | 'rfid_tag' | 'breed' | 'initialHealthStatus' | 'dob' | 'initialWeight' | 'owner' | 'age'| 'count' | 'gender' |'species'>>;
+
   
